@@ -1,0 +1,30 @@
+services:
+  app:
+    build: app
+    ports:
+      - '3000:3000'
+    working_dir: /app
+    volumes:
+      - ./www/:/var/www
+    environment:
+      MYSQL_HOST: db
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+      MYSQL_DB: REDCapv10
+
+  db:
+    image: mariadb:10.3.35
+    volumes:
+      - redcap-cuh:/var/lib/mariadb
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: REDCapv10
+
+  mailhog:
+    image: mailhog/mailhog:v1.0.0
+    ports:
+      - '1025:1025'
+      - '8025:8025'
+
+volumes:
+  redcap-cuh:
