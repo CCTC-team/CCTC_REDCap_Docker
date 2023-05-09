@@ -8,7 +8,7 @@ VOLUME /var/www/html/
 
 # COPY ./www/ .
 
-COPY ../temp_www/ /var/www/html/
+COPY www/ /var/www/html/
 
 EXPOSE 80
 
