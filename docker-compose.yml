@@ -3,16 +3,9 @@ services:
     build:
       dockerfile: ./Dockerfile
     ports:
-      - '8081:8081'
+      - '8080:80'
     depends_on:
       - db
-    networks:
-      - redcap-network
-
-  web:
-    image: php:8.1-apache-buster
-    ports:
-      - '8080:8080'
     networks:
       - redcap-network
 
