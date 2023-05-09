@@ -1,0 +1,58 @@
+services:
+  app1:
+    build:
+      dockerfile: ./Dockerfile
+    ports:
+      - '8081:8081'
+    depends_on:
+      - db
+    networks:
+      - redcap-network
+
+  web:
+    image: php:8.1-apache-buster
+    ports:
+      - '8080:8080'
+    networks:
+      - redcap-network
+
+  db:
+    image: mariadb:10.3.35
+    ports:
+      - '3306:3306'
+    volumes:
+      - redcap-cuh:/var/lib/mariadb
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: redcap
+    networks:
+      - redcap-network
+
+  mailhog:
+    image: mailhog/mailhog:v1.0.0
+    ports:
+      - '1025:1025'
+      - '8025:8025'
+    depends_on:
+      - app1
+    networks:
+      - redcap-network
+
+  phpadmin:
+    image: kwajahussain/phpadmin
+    ports:
+      - '80:80'
+    depends_on:
+      - db
+    networks:
+      - redcap-network
+
+
+
+volumes:
+  redcap-cuh:
+
+networks:
+  redcap-network:
+
+
