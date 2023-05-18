@@ -6,6 +6,8 @@ services:
       - '8080:80'
     depends_on:
       - db
+    volumes:
+      - ./www/:/var/www/html/
     networks:
       - redcap-network
 
@@ -15,9 +17,8 @@ services:
       - '3306:3306'
     volumes:
       - redcap-cuh:/var/lib/mariadb
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: redcap
+    env_file:
+      - app/db.env
     networks:
       - redcap-network
 
