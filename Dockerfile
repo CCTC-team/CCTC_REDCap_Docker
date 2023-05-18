@@ -4,11 +4,25 @@ FROM php:7.3.20-apache
 
 # WORKDIR /www
 
-VOLUME /var/www/html/
+# VOLUME /var/www/html/
+# COPY ./www/ /var/www/html/
 
 # COPY ./www/ .
 
-COPY ./www/ /var/www/html/
+# COPY php.ini /etc/
+
+
+RUN docker-php-ext-install mysqli && docker-php-ext-enable mysqli
+
+# this image leads to two conflicting installations of PHP in a single image, which is almost certainly not the intended outcome.
+# RUN rm /etc/apt/preferences.d/no-debian-php
+
+# RUN apt-get -y update
+# RUN apt-get -y upgrade
+# # RUN apt-get install -y sqlite libsqlite-dev
+# RUN apt-get install php-mysqli
+# # RUN service apache2 restart
+# RUN mkdir /db
 
 # Update the repository sources list
 RUN apt-get update
