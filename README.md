@@ -1,3 +1,3 @@
-# CUH_REDCap_Docker
+# CCTC_REDCap_Docker
 
 Copy and paste the www folder used for installation of redcap in CUH_REDCap_Docker folder.
