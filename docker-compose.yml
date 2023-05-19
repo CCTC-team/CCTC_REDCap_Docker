@@ -8,8 +8,6 @@ services:
       - db
     volumes:
       - ./www/:/var/www/html/
-    networks:
-      - redcap-network
 
   db:
     image: mariadb:10.3.35
@@ -19,8 +17,6 @@ services:
       - redcap-cuh:/var/lib/mariadb
     env_file:
       - app/db.env
-    networks:
-      - redcap-network
 
   mailhog:
     image: mailhog/mailhog:v1.0.0
@@ -29,8 +25,6 @@ services:
       - '8025:8025'
     depends_on:
       - app1
-    networks:
-      - redcap-network
 
   phpadmin:
     image: kwajahussain/phpadmin
@@ -38,15 +32,9 @@ services:
       - '80:80'
     depends_on:
       - db
-    networks:
-      - redcap-network
-
-
-
+   
 volumes:
   redcap-cuh:
 
-networks:
-  redcap-network:
 
 
