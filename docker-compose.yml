@@ -1,5 +1,5 @@
 services:
-  app1:
+  app:
     build:
       dockerfile: ./Dockerfile
     ports:
@@ -14,7 +14,7 @@ services:
     ports:
       - '3306:3306'
     volumes:
-      - redcap-cuh:/var/lib/mariadb
+      - ./db/:/var/lib/mariadb
     env_file:
       - app/db.env
 
@@ -24,7 +24,7 @@ services:
       - '1025:1025'
       - '8025:8025'
     depends_on:
-      - app1
+      - app
 
   phpadmin:
     image: kwajahussain/phpadmin
@@ -32,9 +32,7 @@ services:
       - '80:80'
     depends_on:
       - db
-   
-volumes:
-  redcap-cuh:
+
 
 
 

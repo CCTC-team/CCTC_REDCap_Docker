@@ -397,6 +397,10 @@ FodyWeavers.xsd
 # JetBrains Rider
 *.sln.iml
 
-#do not include files in www folder
+#do not include files in www folder except database.php
 !www/database.php
 www/*
+
+#do not include files in db folder except readme.txt
+!db/readme.txt
+db/*
