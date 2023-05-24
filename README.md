@@ -1,11 +1,12 @@
 # CCTC_REDCap_Docker
+
 This docker is used to run REDCap locally. It is implemented using PHP version 7.3.20 and MariaDB version 10.3.35. 
 
 Update the docker-compose.yml file with the ports you plan on using (if non-standard).
 The database connection details are provided in database.php file inside 'www' folder.
 
 
-Installing REDCap:
+# Installing REDCap:
 1. Clone the repository.
 2. Copy and paste the contents of 'redcap' folder, in the redcap installation folder, into the folder 'www' (Do not replace database.php file inside 'www' folder).
 3. Run the following command:
@@ -19,7 +20,11 @@ Installing REDCap:
     (to delete volumes): $ docker-compose down -v
 
 
-Upgrading REDCap:
+# Creating Users
+Login to the database through MYSQL Workbench and run the SQL in CreateUsers.sql
+Username and Password for the database: root
+
+# Upgrading REDCap:
 1. Keep the redcap version folder redcap_vxx.x.xx in the 'www' folder.
 2. Open the browser, go to 'Control Center' and press the upgrade button 
     or 
