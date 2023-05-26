@@ -22,8 +22,13 @@ The database connection details are provided in database.php file inside 'www' f
 
 # Creating Users
 Login to the database through MYSQL Workbench and run the SQL in CreateUsers.sql
+
 Username and Password for the database: root
+
 This SQL creates 3 users (test_user, test_user2, test_admin) all having the same password: Testing123
+
+After setting the authentication in REDCap to 'Table-based', these username and password can be used to login to REDCap.
+
 
 # Upgrading REDCap:
 1. Download the REDCap installation file from the community page. (Choose Upgrade.zip file for the version you want to upgrade to). Unzip it and copy the contents of 'redcap' folder (i.e., redcap_vxx.x.xx folder) into the 'www' folder.
