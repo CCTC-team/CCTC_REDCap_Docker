@@ -8,7 +8,7 @@ The database connection details are provided in database.php file inside 'www' f
 
 # Installing REDCap:
 1. Clone the repository.
-2. Copy and paste the contents of 'redcap' folder, in the redcap installation folder, into the folder 'www' (Do not replace database.php file inside 'www' folder).
+2. Download the REDCap installation file from he community page. When installing REDCap for the first time, download Install.zip of the version you want to install. Unzip it and copy the contents of 'redcap' folder into the 'www' folder (Do not replace database.php file inside 'www' folder).
 3. Run the following command:
     $ docker-compose build
     $ docker-compose up -d
@@ -23,9 +23,10 @@ The database connection details are provided in database.php file inside 'www' f
 # Creating Users
 Login to the database through MYSQL Workbench and run the SQL in CreateUsers.sql
 Username and Password for the database: root
+This SQL creates 3 users (test_user, test_user2, test_admin) all having the same password: Testing123
 
 # Upgrading REDCap:
-1. Keep the redcap version folder redcap_vxx.x.xx in the 'www' folder.
+1. Download the REDCap installation file from the community page. (Choose Upgrade.zip file for the version you want to upgrade to). Unzip it and copy the contents of 'redcap' folder (i.e., redcap_vxx.x.xx folder) into the 'www' folder.
 2. Open the browser, go to 'Control Center' and press the upgrade button 
     or 
     type the following in the browser:
