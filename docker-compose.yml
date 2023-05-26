@@ -19,12 +19,11 @@ services:
       - app/db.env
 
   mailhog:
-    image: mailhog/mailhog:v1.0.0
+    image: mailhog/mailhog:latest
+    restart: always
     ports:
-      - '1025:1025'
-      - '8025:8025'
-    depends_on:
-      - app
+      - 1025:1025
+      - 8025:8025
 
   phpadmin:
     image: kwajahussain/phpadmin
