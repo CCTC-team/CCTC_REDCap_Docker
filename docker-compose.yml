@@ -1,5 +1,6 @@
 services:
   app:
+    container_name: debian
     build:
       dockerfile: ./Dockerfile
     ports:
@@ -8,17 +9,19 @@ services:
       - db
     volumes:
       - ./www/:/var/www/html/
-
+      
   db:
+    container_name: mariadb
     image: mariadb:10.3.35
     ports:
       - '3306:3306'
     volumes:
-      - ./db/:/var/lib/mariadb
+      - mySQLVolume:/var/lib/mysql
     env_file:
       - app/db.env
 
   mailhog:
+    container_name: mailhog
     image: mailhog/mailhog:latest
     restart: always
     ports:
@@ -26,12 +29,15 @@ services:
       - 8025:8025
 
   phpadmin:
+    container_name: phpadmin
     image: kwajahussain/phpadmin
     ports:
       - '80:80'
     depends_on:
       - db
 
-
+volumes:
+  mySQLVolume:
+    external: true
 
 
