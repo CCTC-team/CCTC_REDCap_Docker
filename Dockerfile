@@ -3,7 +3,7 @@ FROM php:7.3.20-apache
 # RUN mkdir /var/lib/mariadb
 
 # Copy php.ini to container's configuration path
-COPY php.ini /usr/local/etc/php
+COPY php.ini /usr/local/etc/php/php.ini
 
 RUN apt update
 
@@ -20,7 +20,7 @@ RUN go get github.com/mailhog/mhsendmail
 
 RUN cp /root/go/bin/mhsendmail /usr/bin/mhsendmail
 
-RUN echo 'sendmail_path = /usr/bin/mhsendmail --smtp-addr mailhog:1025' > /usr/local/etc/php/php.ini
+RUN echo 'sendmail_path = /usr/bin/mhsendmail --smtp-addr mailhog:1025' >> /usr/local/etc/php/php.ini
 
 # Installiing mysqlite extension for php
 RUN docker-php-ext-install mysqli && docker-php-ext-enable mysqli
