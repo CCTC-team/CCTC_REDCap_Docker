@@ -1,7 +1,5 @@
 FROM php:7.3.20-apache
 
-# RUN mkdir /var/lib/mariadb
-
 # Copy php.ini to container's configuration path
 COPY php.ini /usr/local/etc/php/php.ini
 
