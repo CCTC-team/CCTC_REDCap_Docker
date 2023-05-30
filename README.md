@@ -17,7 +17,9 @@ The database connection details are provided in database.php file inside 'www' f
 5. Open up the browser and type the following
     `http://localhost:8080`
 6. Following the instruction for installing REDCap. 
-7. To bring down the docker instance, use the command:
+7. In Control Center -> File Upload Settings, set LOCAL FILE STORAGE LOCATION as follows:
+    `/var/www/html/redcap_file_repository/`
+8. To bring down the docker instance, use the command:
     (to keep volumes): `$ docker-compose down`
     (to delete volumes): `$ docker-compose down -v`
 

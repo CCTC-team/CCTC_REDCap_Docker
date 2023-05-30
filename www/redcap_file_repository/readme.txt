@@ -1,0 +1,1 @@
+This folder is used as 'Local file storage location'
