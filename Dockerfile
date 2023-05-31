@@ -1,4 +1,5 @@
 FROM php:7.3.20-apache
+# FROM php:8.0-apache
 
 # Copy php.ini to container's configuration path
 COPY php.ini /usr/local/etc/php/php.ini
@@ -35,18 +36,26 @@ RUN apt-get update && apt-get install -y \
 
 RUN apt update
 
-#install some base extensions for php-zip
+# Install some base extensions for php-zip
 RUN apt-get install -y \
         libzip-dev \
         zip \
-  && docker-php-ext-configure zip --with-libzip \
+  && docker-php-ext-configure zip \
   && docker-php-ext-install zip
 
 # Update the repository sources list
 RUN apt-get update
 
-# Install and run apache
-RUN apt-get install -y apache2 && apt-get clean
+# Install imagick extension in php for REDCap 13.1.20
+RUN apt-get update; \
+    apt-get install -y libmagickwand-dev; \
+    pecl install imagick; \
+    docker-php-ext-enable imagick;
+
+# Change policy.xml (located at /etc/ImageMagick-6/), change PDF rights to 'read'
+RUN  sed -i 's|policy domain="coder" rights="none" pattern="PDF"|policy domain="coder" rights="read" pattern="PDF" |g' /etc/ImageMagick-6/policy.xml
+
+# RUN echo 'max_allowed_packet = 128M' > /etc/my.cnf
 
 EXPOSE 80
 
