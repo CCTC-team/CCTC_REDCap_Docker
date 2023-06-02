@@ -44,4 +44,24 @@ After setting the authentication in REDCap to 'Table-based', these username and 
     Note: sometimes if the upgrade.php doesn't work for some reason, try invoking upgrade.php inside the version folder (redcapv_xx.x.xx).
     `http://localhost:8080/redcap_vxx.x.xx/upgrade.php`
 3. Follow the instructions in the browser to upgrade REDCap.
+4. Verify the configuration checks in the ‘Control Center’ pass.  
+5. Replace the outdated files to root directory after upgrade (redcap_connect.php). This is available as a zip file in the ‘Configuration Check’ link in ‘Control Center’. Unzip it and place it in the www folder. 
+
+# Note: 
+1. REDCap 13 requires max_allowed_packet=128M to be added to etc/my.cnf for SQL server. Hence added the following in docker-compose file: 
+    `command: --max_allowed_packet=128M`
+2. REDCap version 13 requires installing imagick extension for PHP. After installing this, change the PDF permission to ‘read’ in policy.xml file located in '/etc/ImageMagick-6/’. This is done in Dockerfile.
+    `<policy domain="coder" rights="read" pattern="PDF"/>`
+
+# MailHog
+Type the following to see all the emails sent out from REDCap.
+`http://localhost:8025`
+
+# PhpAdmin
+Type the following to view PHPAdmin
+`http://localhost:80`
+
+# Linux 
+To get conatiner id: `docker ps`
+To execute Linux container and use bash shell: `docker exec -it <conatiner-id> sh`
 
