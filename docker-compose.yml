@@ -12,8 +12,8 @@ services:
       
   db:
     container_name: mariadb
-    image: mariadb:10.3.35
-    # image: mariadb:10.5
+    # image: mariadb:10.3.35
+    image: mariadb:10.5.16
     ports:
       - '3306:3306'
     volumes:
@@ -22,10 +22,10 @@ services:
       - app/db.env
     command: 
       - --max_allowed_packet=128M
-      # - --optimizer_switch=rowid_filter=OFF # Only for MariaDB 10.5
-      # - --query_cache_size=16777216 # Only for MariaDB 10.5
-      # - --query_cache_type=1 # Only for MariaDB 10.5
-      # - --query_cache_limit=16777216 # Only for MariaDB 10.5
+      - --optimizer_switch=rowid_filter=OFF # Only for MariaDB 10.5
+      - --query_cache_size=16777216 # Only for MariaDB 10.5
+      - --query_cache_type=1 # Only for MariaDB 10.5
+      - --query_cache_limit=16777216 # Only for MariaDB 10.5
      
   mailhog:
     container_name: mailhog
