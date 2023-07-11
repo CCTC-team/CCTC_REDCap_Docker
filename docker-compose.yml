@@ -34,6 +34,9 @@ services:
     ports:
       - 1025:1025
       - 8025:8025
+    command: ["-storage=maildir", "-maildir-path=/maildir"]
+    volumes:
+      - ./volumes/mailhog/volume:/maildir
 
   phpadmin:
     container_name: phpadmin
