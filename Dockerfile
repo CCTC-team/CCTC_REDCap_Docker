@@ -56,6 +56,12 @@ RUN apt-get update; \
 RUN  sed -i 's|policy domain="coder" rights="none" pattern="PDF"|policy domain="coder" rights="read" pattern="PDF" |g' /etc/ImageMagick-6/policy.xml
 
 # RUN echo 'max_allowed_packet = 128M' > /etc/my.cnf
+# Enable SSL and add certificates
+RUN a2enmod rewrite && a2enmod ssl && a2enmod socache_shmcb
+RUN sed -i '/SSLCertificateFile.*snakeoil\.pem/c\SSLCertificateFile \/etc\/ssl\/certs\/mycert.crt' /etc/apache2/sites-available/default-ssl.conf && sed -i '/SSLCertificateKeyFile.*snakeoil\.key/cSSLCertificateKeyFile /etc/ssl/private/mycert.key\' /etc/apache2/sites-available/default-ssl.conf
+# RUN sed -i '/SSLCertificateFile.*snakeoil\.pem/c\SSLCertificateFile \/etc\/ssl\/certs\/webserver-pub.pem' /etc/apache2/sites-available/default-ssl.conf && sed -i '/SSLCertificateKeyFile.*snakeoil\.key/cSSLCertificateKeyFile /etc/ssl/private/webserver-key.pem\' /etc/apache2/sites-available/default-ssl.conf
+RUN a2ensite default-ssl
+RUN apt-get update && apt-get upgrade -y
 
 EXPOSE 80
 

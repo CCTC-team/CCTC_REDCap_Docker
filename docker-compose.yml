@@ -5,9 +5,14 @@ services:
       dockerfile: ./Dockerfile
     ports:
       - '8080:80'
+      - 8443:443
     depends_on:
       - db
     volumes:
+      - ./mycert.crt:/etc/ssl/certs/mycert.crt
+      - ./mycert.key:/etc/ssl/private/mycert.key
+      # - ./webserver-pub.pem:/etc/ssl/certs/webserver-pub.pem
+      # - ./webserver-key.pemy:/etc/ssl/private/webserver-key.pem
       - ./www/:/var/www/html/
       
   db:
