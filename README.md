@@ -1,10 +1,12 @@
 # CCTC_REDCap_Docker
 
-This docker is used to run REDCap locally. It is implemented using PHP version 7.3.20 and MariaDB version 10.3.35. 
+This docker is used to run REDCap locally. It is implemented using PHP version 8.0.27 and MariaDB version 10.5.16. Use REDCap version 13.8.1 
+SSL certificate has been added to Docker. (The site would say it's not secure but since it is a docker instance it should be okay) 
 
 Update the docker-compose.yml file with the ports you plan on using (if non-standard).
 The database connection details are provided in database.php file inside 'www' folder.
 
+Note: For using REDCap versions 10 and 11; or different versions of PHP and MariaDB, modify docker-compose.yml and Dockerfile.
 
 # Installing REDCap:
 1. Create external volume, 'mySQLVolume'. This is used by mariadb container for data persistence. Run the following command in command-line:
@@ -15,7 +17,8 @@ The database connection details are provided in database.php file inside 'www' f
     `$ docker-compose build`
     `$ docker-compose up -d`
 5. Open up the browser and type the following
-    `http://localhost:8080`
+    `https://localhost:8443`
+    `http://localhost:8080` - This might not work after adding SSL certificate
 6. Following the instruction for installing REDCap. 
 7. In Control Center -> File Upload Settings, set LOCAL FILE STORAGE LOCATION as follows:
     `/var/www/html/redcap_file_repository/`
@@ -39,10 +42,12 @@ After setting the authentication in REDCap to 'Table-based', these username and 
 2. Open the browser, go to 'Control Center' and press the upgrade button 
     or 
     type the following in the browser:
-    `http://localhost:8080/upgrade.php`
+    `https://localhost:8443/upgrade.php`
+    `http://localhost:8080/upgrade.php` - This might not work after adding SSL certificate
 
     Note: sometimes if the upgrade.php doesn't work for some reason, try invoking upgrade.php inside the version folder (redcapv_xx.x.xx).
-    `http://localhost:8080/redcap_vxx.x.xx/upgrade.php`
+    `https://localhost:8443/redcap_vxx.x.xx/upgrade.php`
+    `http://localhost:8080/redcap_vxx.x.xx/upgrade.php` - This might not work after adding SSL certificate
 3. Follow the instructions in the browser to upgrade REDCap.
 4. Verify the configuration checks in the ‘Control Center’ pass.  
 5. Replace the outdated files to root directory after upgrade (redcap_connect.php). This is available as a zip file in the ‘Configuration Check’ link in ‘Control Center’. Unzip it and place it in the www folder. 
