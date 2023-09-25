@@ -16,7 +16,7 @@ Note: For using REDCap versions 10 and 11; or different versions of PHP and Mari
 4. Run the following commands in command-line:
     `$ docker-compose build`
     `$ docker-compose up -d`
-5. Open up the browser and type the following
+5. Open up the browser and type the following:
     `https://localhost:8443`
     `http://localhost:8080` - This might not work after adding SSL certificate
 6. Following the instruction for installing REDCap. 
@@ -36,6 +36,12 @@ This SQL creates 3 users (test_user, test_user2, test_admin) all having the same
 
 After setting the authentication in REDCap to 'Table-based', these username and password can be used to login to REDCap.
 
+# Bringing Docker up again after initial setup
+1.  Open the folder location 'CCTC_REDCap_Docker' in command-line and run the following command:
+    `$ docker-compose up -d`
+2. Open up the browser and type the following:
+    `https://localhost:8443`
+    `http://localhost:8080` - This might not work after adding SSL certificate
 
 # Upgrading REDCap:
 1. Download the REDCap installation file from the community page. (Choose Upgrade.zip file for the version you want to upgrade to). Unzip it and copy the contents of 'redcap' folder (i.e., redcap_vxx.x.xx folder) into the 'www' folder.
