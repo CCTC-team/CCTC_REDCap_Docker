@@ -11,14 +11,11 @@ services:
     volumes:
       - ./mycert.crt:/etc/ssl/certs/mycert.crt
       - ./mycert.key:/etc/ssl/private/mycert.key
-      # - ./webserver-pub.pem:/etc/ssl/certs/webserver-pub.pem
-      # - ./webserver-key.pemy:/etc/ssl/private/webserver-key.pem
       - ./www/:/var/www/html/
       
   db:
     container_name: mariadb
     image: mariadb:10.5.22
-    # image: mariadb:10.5.16
     ports:
       - '3306:3306'
     volumes:
