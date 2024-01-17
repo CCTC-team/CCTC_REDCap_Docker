@@ -404,3 +404,6 @@ www/redcap_file_repository/*
 # do not include files in www folder except database.php
 !www/database.php
 www/*
+
+# do not include volumes folder. This is created automatically for MailHog
+volumes/*
