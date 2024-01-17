@@ -1,5 +1,5 @@
-# FROM php:7.3.20-apache
-FROM php:8.0.27-apache
+FROM php:8.0.30-apache
+# FROM php:8.0.27-apache
 
 # Copy php.ini to container's configuration path
 COPY php.ini /usr/local/etc/php/php.ini
