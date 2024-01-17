@@ -1,8 +1,8 @@
 # CCTC_REDCap_Docker
 
-This project allows you to run REDCap locally in a Docker container. It is implemented using PHP version 8.0.27 and MariaDB version 10.5.16.
+This project allows you to run REDCap locally in a Docker container. It is implemented using PHP version 8.0.30 and MariaDB version 10.5.22.
 
-Use REDCap version 13.8.1.
+Tested on REDCap versions from 10.6.12 to 14.0.7
 SSL certificate has been added. The browser may report the site as insecure, but since it is a docker instance it should be okay as the site only runs locally on your computer.
 
 Update the docker-compose.yml file with the ports you plan on using if non-standard.
