@@ -14,7 +14,7 @@ Note: to use REDCap versions 10 and 11, or different versions of PHP and MariaDB
 1. Create external volume, 'mySQLVolume'. This is used by mariadb container for data persistence - run the following command in command-line:
     - `docker volume create mySQLVolume`
 2. Clone this repository
-3. Download the REDCap installation file you want to use from the community page. When installing REDCap for the first time, download the `install.zip` file of the version you want to install. Unzip it and copy the contents of 'redcap' folder into the 'www' folder but do not replace database.php file inside 'www' folder.
+3. Download the REDCap installation file you want to use from the community page. When installing REDCap for the first time, download the `install.zip` file of the version you want to install. Unzip it and copy the contents of 'redcap' folder (do not copy the 'redcap' folder) into the 'www' folder but do not replace database.php file inside 'www' folder.
 4. Run the following commands on the command-line:
     - `$ docker-compose build`
     - `$ docker-compose up -d`
