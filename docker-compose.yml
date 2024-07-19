@@ -11,13 +11,13 @@ services:
     volumes:
       - ./mycert.crt:/etc/ssl/certs/mycert.crt
       - ./mycert.key:/etc/ssl/private/mycert.key
-      - ./www/:/var/www/html/
+      - ../REDCapSource/www/:/var/www/html/
       
   db:
     container_name: mariadb
     image: mariadb:10.5.22
     ports:
-      - '3306:3306'
+      - '3400:3306'
     volumes:
       - mySQLVolume:/var/lib/mysql
     env_file:
