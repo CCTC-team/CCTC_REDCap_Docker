@@ -5,7 +5,7 @@ services:
       dockerfile: ./Dockerfile
     ports:
       - '8080:80'
-      - 8443:443
+      - '8443:443'
     depends_on:
       - db
     volumes:
@@ -31,11 +31,11 @@ services:
      
   mailhog:
     container_name: mailhog
-    image: mailhog/mailhog:latest
+    image: mailhog/mailhog:v1.0.0
     restart: always
     ports:
-      - 1025:1025
-      - 8025:8025
+      - "1025:1025"
+      - "8025:8025"
     command: ["-storage=maildir", "-maildir-path=/maildir"]
     volumes:
       - ./volumes/mailhog/volume:/maildir
