@@ -61,7 +61,7 @@ After setting the authentication in REDCap to 'Table-based', the users listed ca
         - `http://localhost:8080/redcap_vxx.x.xx/upgrade.php`
 3. Follow the instructions in the browser to upgrade REDCap
 4. Ensure the configuration checks in the ‘Control Center’ pass
-5. If outdated files are available in 'Configuration Check', replace them in the root directory after upgrade (e.g., redcap_connect.php). A zip file containing the updated files is available in the ‘Configuration Check’ link within the ‘Control Center.’ Unzip the file and place its contents in the www folder.
+5. After upgrade, replace any outdated files to redcap root directory (e.g. redcap_connect.php). If any exist, download the zip file from the ‘Configuration Check’ link in ‘Control Center’, unzip it and place it in the www folder.
 
 ## Note:
 1. REDCap 13 requires max_allowed_packet=128M to be added to etc/my.cnf for SQL server. Hence, add the following in docker-compose file:
