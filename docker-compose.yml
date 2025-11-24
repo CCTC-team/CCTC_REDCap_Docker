@@ -11,7 +11,7 @@ services:
     volumes:
       - ./mycert.crt:/etc/ssl/certs/mycert.crt
       - ./mycert.key:/etc/ssl/private/mycert.key
-      - ./www/:/var/www/html/
+      - ../redcap_source/:/var/www/html/
       
   db:
     container_name: mariadb
