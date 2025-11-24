@@ -14,17 +14,17 @@ Note: to use REDCap versions 10 and 11, or different versions of PHP and MariaDB
 1. Create external volume, 'mySQLVolume'. This is used by mariadb container for data persistence - run the following command in command-line:
     - `docker volume create mySQLVolume`
 2. Clone this repository
-3. Download the REDCap installation file you want to use from the community page. When installing REDCap for the first time, download the `install.zip` file of the version you want to install. Unzip it and copy the contents of 'redcap' folder (do not copy the 'redcap' folder) into the 'www' folder but do not replace database.php file inside 'www' folder.
-4. Run the following commands on the command-line:
+3. Download `install.zip` for your desired REDCap version from the community page. Unzip it and copy the contents of the 'redcap' folder to a new folder called `redcap_source` at the same level as CCTC_REDCap_Docker (i.e., `../redcap_source`).
+4. Copy the `database.php` file from `CCTC_REDCap_Docker/www/` to `redcap_source/`, overwriting the existing file.
+5. Create a `redcap_file_repository` folder inside `redcap_source/` (i.e., `../redcap_source/redcap_file_repository/`)
+6. Run the following commands on the command-line:
     - `$ docker-compose build`
     - `$ docker-compose up -d`
-5. Open up the browser and navigate to one of the following:
-    - `https://localhost:8443`
-    - `http://localhost:8080`
-6. Follow the instructions given to install REDCap
-7. Once installed, navigate to the Control Center -> File Upload Settings and set LOCAL FILE STORAGE LOCATION as follows:
+7. Open up the browser and navigate to `https://localhost:8443`
+8. Follow the instructions given to install REDCap
+9. Once installed, navigate to the Control Center -> File Upload Settings and set LOCAL FILE STORAGE LOCATION as follows:
     - `/var/www/html/redcap_file_repository/`
-8. To bring down the docker instance, use one of these commands:
+10. To bring down the docker instance, use one of these commands:
     - `$ docker-compose down` - best option as any changes made are preserved
     - `$ docker-compose down -v` - to also remove the volume and its data
 
@@ -44,24 +44,19 @@ After setting the authentication in REDCap to 'Table-based', the users listed ca
 ## Bringing REDCap up again after initial setup
 1.  Open the folder location 'CCTC_REDCap_Docker' (the folder where docker-compose.yml is located) in the command-line and run the following command:
     - `$ docker-compose up -d`
-2. Open up the browser and navigate to either
-    - `https://localhost:8443`
-    - `http://localhost:8080`
+2. Open up the browser and navigate to `https://localhost:8443`
 
 ## Upgrading REDCap:
-1. Download the required REDCap installation file from the community page, choosing the upgrade.zip file for the version you want to upgrade to. Unzip it and copy the contents of 'redcap' folder (i.e. redcap_vxx.x.xx folder) into the 'www' folder
+1. Download `upgrade.zip` for your target REDCap version from the community page. Unzip it and copy the contents of the 'redcap' folder (the `redcap_vxx.x.xx` folder) into `redcap_source/`
 2. Either
     - open the browser, go to 'Control Center' and press the upgrade button or
-    - navigate to either of the following in the browser:
-        - `https://localhost:8443/upgrade.php`
-        - `http://localhost:8080/upgrade.php`
+    - navigate to `https://localhost:8443/upgrade.php` in your browser
 
-        Note: if the upgrade.php doesn't work, try invoking upgrade.php inside the version folder (redcapv_xx.x.xx).
-        - `https://localhost:8443/redcap_vxx.x.xx/upgrade.php`
-        - `http://localhost:8080/redcap_vxx.x.xx/upgrade.php`
+    Note: if the upgrade.php doesn't work, try invoking upgrade.php inside the version folder (redcapv_xx.x.xx).
+    - `https://localhost:8443/redcap_vxx.x.xx/upgrade.php`
 3. Follow the instructions in the browser to upgrade REDCap
 4. Ensure the configuration checks in the ‘Control Center’ pass
-5. After upgrade, replace any outdated files to redcap root directory (e.g. redcap_connect.php). If any exist, download the zip file from the ‘Configuration Check’ link in ‘Control Center’, unzip it and place it in the www folder.
+5. After upgrade, replace any outdated files to redcap root directory (e.g. redcap_connect.php). If any exist, download the zip file from the ‘Configuration Check’ link in ‘Control Center’, unzip it and place it in the 'redcap_source' folder.
 
 ## Note:
 1. REDCap 13 requires max_allowed_packet=128M to be added to etc/my.cnf for SQL server. Hence, add the following in docker-compose file:
