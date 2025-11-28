@@ -1,4 +1,4 @@
-FROM --platform=linux/amd64 php:8.2.25-apache
+FROM --platform=linux/amd64 php:8.2.28-apache
 
 # Copy php.ini to container's configuration path
 COPY php.ini /usr/local/etc/php/php.ini
