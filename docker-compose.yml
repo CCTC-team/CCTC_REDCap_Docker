@@ -15,7 +15,7 @@ services:
       
   db:
     container_name: mariadb
-    image: mariadb:10.5.27
+    image: mariadb:10.5.29
     ports:
       - '3306:3306'
     volumes:
