@@ -1,4 +1,4 @@
-FROM --platform=linux/amd64 php:8.2.25-apache
+FROM --platform=linux/amd64 php:8.2.28-apache
 
 # Copy php.ini to container's configuration path
 COPY php.ini /usr/local/etc/php/php.ini
@@ -10,11 +10,11 @@ RUN apt-get update &&\
     apt-get install --no-install-recommends --assume-yes --quiet ca-certificates curl git &&\
     rm -rf /var/lib/apt/lists/*
 
-RUN curl -Lsf 'https://storage.googleapis.com/golang/go1.8.3.linux-amd64.tar.gz' | tar -C '/usr/local' -xvzf -
+RUN curl -Lsf 'https://go.dev/dl/go1.21.6.linux-amd64.tar.gz' | tar -C '/usr/local' -xvzf -
 
 ENV PATH /usr/local/go/bin:$PATH
 
-RUN go get github.com/mailhog/mhsendmail
+RUN go install github.com/mailhog/mhsendmail@latest
 
 RUN cp /root/go/bin/mhsendmail /usr/bin/mhsendmail
 
