@@ -5,6 +5,7 @@ services:
       dockerfile: ./Dockerfile
     ports:
       - '8080:80'
+      - '8443:443'
     depends_on:
       - db
     volumes:
@@ -21,7 +22,7 @@ services:
       - mySQLVolume:/var/lib/mysql
     env_file:
       - app/db.env
-    command: 
+    command:
       - --max_allowed_packet=128M
       - --optimizer_switch=rowid_filter=OFF # Only for MariaDB 10.5
       - --query_cache_size=16777216 # Only for MariaDB 10.5
@@ -31,6 +32,7 @@ services:
   mailhog:
     container_name: mailhog
     image: mailhog/mailhog:v1.0.0
+    platform: linux/amd64
     restart: always
     ports:
       - "1025:1025"
@@ -41,9 +43,12 @@ services:
 
   phpadmin:
     container_name: phpadmin
-    image: kwajahussain/phpadmin
+    image: phpmyadmin/phpmyadmin:latest
+    platform: linux/amd64
     ports:
       - '80:80'
+    env_file:
+      - app/db.env
     depends_on:
       - db
 

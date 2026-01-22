@@ -1,4 +1,4 @@
-FROM --platform=linux/amd64 php:8.2.28-apache
+FROM php:8.2.28-apache
 
 # Copy php.ini to container's configuration path
 COPY php.ini /usr/local/etc/php/php.ini
@@ -10,7 +10,7 @@ RUN apt-get update &&\
     apt-get install --no-install-recommends --assume-yes --quiet ca-certificates curl git &&\
     rm -rf /var/lib/apt/lists/*
 
-RUN curl -Lsf 'https://go.dev/dl/go1.21.6.linux-amd64.tar.gz' | tar -C '/usr/local' -xvzf -
+RUN curl -Lsf "https://go.dev/dl/go1.21.6.linux-arm64.tar.gz" | tar -C '/usr/local' -xvzf -
 
 ENV PATH /usr/local/go/bin:$PATH
 
@@ -18,7 +18,7 @@ RUN go install github.com/mailhog/mhsendmail@latest
 
 RUN cp /root/go/bin/mhsendmail /usr/bin/mhsendmail
 
-RUN echo 'sendmail_path = /usr/bin/mhsendmail --smtp-addr mailhog:1025' >> /usr/local/etc/php/php.ini
+RUN echo 'sendmail_path = "/usr/bin/mhsendmail --smtp-addr=mailhog:1025"' >> /usr/local/etc/php/php.ini
 
 # Installiing mysqlite extension for php
 RUN docker-php-ext-install mysqli && docker-php-ext-enable mysqli
