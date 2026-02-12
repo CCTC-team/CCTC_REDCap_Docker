@@ -20,9 +20,6 @@ services:
       - MYSQL_PASSWORD=${MYSQL_ROOT_PASSWORD:-root}
       - REDCAP_SALT=${REDCAP_SALT:-12345678}
       - REDCAP_HTTPS_PORT=${REDCAP_HTTPS_PORT:-8443}
-    volumes:
-      - ./mycert.crt:/etc/ssl/certs/mycert.crt:ro
-      - ./mycert.key:/etc/ssl/private/mycert.key:ro
 
   db:
     container_name: redcap-db

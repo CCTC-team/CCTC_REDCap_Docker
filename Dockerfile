@@ -48,6 +48,12 @@ RUN sed -i 's|policy domain="coder" rights="none" pattern="PDF"|policy domain="c
 COPY php.ini /usr/local/etc/php/php.ini
 RUN echo 'sendmail_path = "/usr/bin/mhsendmail --smtp-addr=mailhog:1025"' >> /usr/local/etc/php/php.ini
 
+# Generate self-signed SSL certificate (avoids committing private keys to git)
+RUN openssl req -x509 -nodes -days 3650 -newkey rsa:2048 \
+    -keyout /etc/ssl/private/mycert.key \
+    -out /etc/ssl/certs/mycert.crt \
+    -subj "/C=UK/ST=Cambridge/L=Cambridge/O=CCTC/OU=Programming/CN=localhost"
+
 # Enable Apache modules and SSL
 RUN a2enmod rewrite ssl socache_shmcb && \
     sed -i '/SSLCertificateFile.*snakeoil\.pem/c\SSLCertificateFile /etc/ssl/certs/mycert.crt' /etc/apache2/sites-available/default-ssl.conf && \

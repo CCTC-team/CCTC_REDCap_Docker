@@ -413,5 +413,9 @@ volumes/*
 # Environment file (contains credentials)
 .env
 
+# SSL certificates (generated at build time)
+mycert.key
+mycert.crt
+
 # macOS
 .DS_Store
