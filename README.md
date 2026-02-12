@@ -1,100 +1,116 @@
-# CCTC_REDCap_Docker
+# REDCap Standalone Docker
 
-This project allows you to run REDCap locally in a Docker container. It is implemented using PHP version 8.0.30 and MariaDB version 10.5.22.
+A self-contained Docker setup that runs REDCap with MariaDB, MailHog, and phpMyAdmin. Just place your REDCap source files, configure, and run `docker compose up --build`.
 
-Tested on REDCap versions from 10.6.12 to 14.0.7
-SSL certificate has been added. The browser may report the site as insecure, but since it is a docker instance it should be okay as the site only runs locally on your computer.
+## Prerequisites
 
-Update the docker-compose.yml file with the ports you plan on using if non-standard.
-The database connection details are provided in database.php file inside the 'www' folder.
+- Docker and Docker Compose
+- Valid REDCap license (to obtain source files)
 
-Note: to use REDCap versions 10 and 11, or different versions of PHP and MariaDB, modify the docker-compose.yml and Dockerfile.
+## Quick Start
 
-## Installing REDCap:
-1. Create external volume, 'mySQLVolume'. This is used by mariadb container for data persistence - run the following command in command-line:
-    - `docker volume create mySQLVolume`
-2. Clone this repository
-3. Download `install.zip` for your desired REDCap version from the community page. Unzip it and copy the contents of the 'redcap' folder to a new folder called `redcap_source` at the same level as CCTC_REDCap_Docker (i.e., `../redcap_source`).
-4. Copy the `database.php` file from `CCTC_REDCap_Docker/www/` to `redcap_source/`, overwriting the existing file.
-5. Create a `redcap_file_repository` folder inside `redcap_source/` (i.e., `../redcap_source/redcap_file_repository/`)
-6. Run the following commands on the command-line:
-    - `$ docker-compose build`
-    - `$ docker-compose up -d`
-7. Open up the browser and navigate to `https://localhost:8443`
-8. Follow the instructions given to install REDCap
-9. Once installed, navigate to the Control Center -> File Upload Settings and set LOCAL FILE STORAGE LOCATION as follows:
-    - `/var/www/html/redcap_file_repository/`
-10. To bring down the docker instance, use one of these commands:
-    - `$ docker-compose down` - best option as any changes made are preserved
-    - `$ docker-compose down -v` - to also remove the volume and its data
+### 1. Place REDCap source files
 
+Copy your REDCap installation files into the `redcap_source/` directory. The structure should look like:
 
-## Creating Users
-Using MySQLWorkbench or another client of your choosing, log in to the database with the username of `root` and password `root` and run the scripts in `CreateUsers.sql`
+```
+redcap_source/
+├── redcap_v15.5.33/       # Version directory (name must match your version)
+├── install.php
+├── upgrade.php
+├── redcap_connect.php
+├── index.php
+├── cron.php
+├── api/
+├── bin/
+├── hooks/
+├── Languages/
+├── modules/
+└── ...
+```
 
-The scripts create 3 users:
-- test_user
-- test_user2
-- test_admin
+### 2. Configure
 
-all having the same password of `Testing123`
+```bash
+cp .env.example .env
+```
 
-After setting the authentication in REDCap to 'Table-based', the users listed can be used for logging in.
+Edit `.env` and set `REDCAP_VERSION` to match your version directory (e.g., `15.5.33`).
 
-## Bringing REDCap up again after initial setup
-1.  Open the folder location 'CCTC_REDCap_Docker' (the folder where docker-compose.yml is located) in the command-line and run the following command:
-    - `$ docker-compose up -d`
-2. Open up the browser and navigate to `https://localhost:8443`
+### 3. Build and Run
 
-## Upgrading REDCap:
-1. Download `upgrade.zip` for your target REDCap version from the community page. Unzip it and copy the contents of the 'redcap' folder (the `redcap_vxx.x.xx` folder) into `redcap_source/`
-2. Either
-    - open the browser, go to 'Control Center' and press the upgrade button or
-    - navigate to `https://localhost:8443/upgrade.php` in your browser
+```bash
+docker compose up --build
+```
 
-    Note: if the upgrade.php doesn't work, try invoking upgrade.php inside the version folder (redcapv_xx.x.xx).
-    - `https://localhost:8443/redcap_vxx.x.xx/upgrade.php`
-3. Follow the instructions in the browser to upgrade REDCap
-4. Ensure the configuration checks in the ‘Control Center’ pass
-5. After upgrade, replace any outdated files to redcap root directory (e.g. redcap_connect.php). If any exist, download the zip file from the ‘Configuration Check’ link in ‘Control Center’, unzip it and place it in the 'redcap_source' folder.
+On first run, the database is automatically initialized with REDCap's schema, data, and test users.
 
-## Note:
-1. REDCap 13 requires max_allowed_packet=128M to be added to etc/my.cnf for SQL server. Hence, add the following in docker-compose file:
-    `command: --max_allowed_packet=128M`
-2. REDCap version 13 requires installing imagick extension for PHP. After installing this, change the PDF permission to ‘read’ in policy.xml file located in '/etc/ImageMagick-6/’. This is done in Dockerfile.
-    `<policy domain="coder" rights="read" pattern="PDF"/>`
+### 4. Access
 
-## MailHog
-Navigate to the following location to see all the emails sent out from REDCap
-`http://localhost:8025`
+| Service    | URL                        |
+|------------|----------------------------|
+| REDCap     | https://localhost:8443     |
+| REDCap     | http://localhost:8080      |
+| MailHog    | http://localhost:8025      |
+| phpMyAdmin | http://localhost:8081      |
 
-## PhpAdmin
-Navigate to the following location to view PHPAdmin
-`http://localhost:80`
+## Default Users
 
-## Linux
-To get the container id: `docker ps`
-To run the Linux container and use bash shell: `docker exec -it <container-id> sh`
+All test users have password: `Testing123`
 
-## Licence
-MIT License
+| Username     | Role         |
+|-------------|--------------|
+| test_admin  | Super Admin  |
+| test_user1  | Regular User |
+| test_user2  | Regular User |
+| test_user3  | Regular User |
+| test_user4  | Regular User |
+| test_monitor| Monitor      |
+| test_dm     | Data Manager |
+| test_de1    | Data Entry 1 |
+| test_de2    | Data Entry 2 |
+| test_de3    | Data Entry 3 |
+| test_depi   | Data Entry PI|
 
-Copyright (c) 2023 CCTC-team
+## Common Operations
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+### Stop services
+```bash
+docker compose down
+```
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+### Start again (data persists)
+```bash
+docker compose up
+```
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+### Change REDCap version
+1. Place the new version directory in `redcap_source/`
+2. Update `REDCAP_VERSION` in `.env`
+3. Rebuild: `docker compose up --build`
+
+### Full database reset
+```bash
+docker compose down -v
+docker compose up --build
+```
+
+### View logs
+```bash
+docker compose logs -f app
+```
+
+## Architecture
+
+- **app**: PHP 8.2/Apache with REDCap source baked into the image
+- **db**: MariaDB 10.5.29 with persistent volume
+- **mailhog**: SMTP testing (captures all outgoing email)
+- **phpmyadmin**: Database management UI
+
+## Notes
+
+- SSL uses self-signed certificates (browser warnings are expected)
+- MailHog captures all email sent by REDCap (no email leaves the system)
+- The database is automatically initialized on first startup
+- Data persists in Docker volumes across restarts
+- Rebuilding the image (`--build`) does NOT reset the database; use `docker compose down -v` to reset
