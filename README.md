@@ -1,6 +1,6 @@
 # REDCap Standalone Docker
 
-A self-contained Docker setup that runs REDCap with MariaDB, MailHog, and phpMyAdmin. Just place your REDCap source files, configure, and run `docker compose up --build`.
+A single-container Docker setup that runs REDCap with MariaDB, MailHog, and phpMyAdmin — all managed by supervisord. Just place your REDCap source files, configure, and run `docker compose up --build`.
 
 ## Prerequisites
 
@@ -54,6 +54,8 @@ On first run, the database is automatically initialized with REDCap's schema, da
 | MailHog    | http://localhost:8025      |
 | phpMyAdmin | http://localhost:8081      |
 
+Login with `test_admin` / `Testing123`.
+
 ## Default Users
 
 All test users have password: `Testing123`
@@ -97,15 +99,33 @@ docker compose up --build
 
 ### View logs
 ```bash
-docker compose logs -f app
+docker compose logs -f
+```
+
+### Access container shell
+```bash
+docker exec -it redcap-app bash
+```
+
+### Access database directly
+```bash
+docker exec -it redcap-app mysql -u root -proot redcap
 ```
 
 ## Architecture
 
-- **app**: PHP 8.2/Apache with REDCap source baked into the image
-- **db**: MariaDB 10.5.29 with persistent volume
-- **mailhog**: SMTP testing (captures all outgoing email)
-- **phpmyadmin**: Database management UI
+Everything runs in a single Docker container (`redcap-app`) using **supervisord** to manage three processes:
+
+- **Apache/PHP 8.2** — Serves REDCap (ports 80/443/8443) and phpMyAdmin (port 8081)
+- **MariaDB** — Database server (port 3306, exposed as 3400 on host)
+- **MailHog** — SMTP testing (captures all outgoing email, web UI on 8025)
+
+On first startup, the entrypoint script automatically:
+1. Initializes the MariaDB data directory
+2. Creates the database and runs REDCap install SQL scripts
+3. Configures REDCap settings (base URL, auth method, etc.)
+4. Creates all test users
+5. Hands off to supervisord for ongoing process management
 
 ## Notes
 
@@ -114,3 +134,4 @@ docker compose logs -f app
 - The database is automatically initialized on first startup
 - Data persists in Docker volumes across restarts
 - Rebuilding the image (`--build`) does NOT reset the database; use `docker compose down -v` to reset
+- phpMyAdmin is auto-configured to connect with root credentials
