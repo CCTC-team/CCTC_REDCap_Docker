@@ -45,7 +45,7 @@ RUN pecl install imagick && \
 RUN sed -i 's|policy domain="coder" rights="none" pattern="PDF"|policy domain="coder" rights="read|write" pattern="PDF"|g' /etc/ImageMagick-6/policy.xml
 
 # Copy PHP configuration
-COPY php.ini /usr/local/etc/php/php.ini
+COPY CCTC_REDCap_Docker/php.ini /usr/local/etc/php/php.ini
 RUN echo 'sendmail_path = "/usr/bin/mhsendmail --smtp-addr=mailhog:1025"' >> /usr/local/etc/php/php.ini
 
 # Generate self-signed SSL certificate (avoids committing private keys to git)
@@ -60,7 +60,7 @@ RUN a2enmod rewrite ssl socache_shmcb && \
     sed -i '/SSLCertificateKeyFile.*snakeoil\.key/c\SSLCertificateKeyFile /etc/ssl/private/mycert.key' /etc/apache2/sites-available/default-ssl.conf && \
     a2ensite default-ssl
 
-# Copy REDCap source into the image
+# Copy REDCap source into the image (context must be the parent redcap_cypress_docker/ dir)
 COPY redcap_source/ /var/www/html/
 
 # Ensure necessary directories exist with proper permissions
@@ -74,11 +74,11 @@ RUN mkdir -p /var/www/html/edocs \
                                /var/www/html/redcap_file_repository
 
 # Copy entrypoint and supporting files
-COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+COPY CCTC_REDCap_Docker/entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
-COPY database.php /usr/local/share/redcap/database.php.template
-COPY CreateUsers.sql /usr/local/share/redcap/CreateUsers.sql
+COPY CCTC_REDCap_Docker/database.php /usr/local/share/redcap/database.php.template
+COPY CCTC_REDCap_Docker/CreateUsers.sql /usr/local/share/redcap/CreateUsers.sql
 
 EXPOSE 80 443 8443
 

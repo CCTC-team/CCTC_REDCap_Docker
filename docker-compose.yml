@@ -2,8 +2,8 @@ services:
   app:
     container_name: redcap-app
     build:
-      context: .
-      dockerfile: Dockerfile
+      context: ..
+      dockerfile: CCTC_REDCap_Docker/Dockerfile
       args:
         REDCAP_VERSION: ${REDCAP_VERSION}
     ports:
