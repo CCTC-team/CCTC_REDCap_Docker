@@ -13,7 +13,7 @@ A self-contained Docker setup that runs REDCap with MariaDB, MailHog, and phpMyA
 
 ### 1. Place REDCap source files
 
-Copy your REDCap installation files into the `redcap_docker/redcap_source/` directory. The structure should look like:
+Copy your REDCap installation files into the `redcap_source/` directory. The structure should look like:
 
 ```
 redcap_source/
@@ -103,7 +103,7 @@ docker compose down
 
 ### Start again (data persists)
 ```bash
-docker compose up
+docker compose up -d
 ```
 
 ### Rebuild after changes
