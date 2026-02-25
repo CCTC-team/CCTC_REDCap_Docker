@@ -112,7 +112,7 @@ docker compose up --build
 ```
 
 ### Change REDCap version
-1. Place the new version directory in `redcap_docker/redcap_source/`
+1. Place the new version directory in `redcap_source/`
 2. Update `REDCAP_VERSION` in `redcap_docker/.env`
 3. From within `redcap_docker`, rebuild:
    ```bash
