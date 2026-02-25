@@ -45,7 +45,7 @@ RUN pecl install imagick && \
 RUN sed -i 's|policy domain="coder" rights="none" pattern="PDF"|policy domain="coder" rights="read|write" pattern="PDF"|g' /etc/ImageMagick-6/policy.xml
 
 # Copy PHP configuration
-COPY CCTC_REDCap_Docker/php.ini /usr/local/etc/php/php.ini
+COPY redcap_docker/php.ini /usr/local/etc/php/php.ini
 RUN echo 'sendmail_path = "/usr/bin/mhsendmail --smtp-addr=mailhog:1025"' >> /usr/local/etc/php/php.ini
 
 # Generate self-signed SSL certificate (avoids committing private keys to git)
@@ -68,11 +68,11 @@ RUN mkdir -p /var/www/html/redcap_file_repository && \
     chown -R www-data:www-data /var/www/html/redcap_file_repository
 
 # Copy entrypoint and supporting files
-COPY CCTC_REDCap_Docker/entrypoint.sh /usr/local/bin/entrypoint.sh
+COPY redcap_docker/entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
-COPY CCTC_REDCap_Docker/database.php /usr/local/share/redcap/database.php.template
-COPY CCTC_REDCap_Docker/CreateUsers.sql /usr/local/share/redcap/CreateUsers.sql
+COPY redcap_docker/database.php /usr/local/share/redcap/database.php.template
+COPY redcap_docker/CreateUsers.sql /usr/local/share/redcap/CreateUsers.sql
 
 EXPOSE 80 443 8443
 
