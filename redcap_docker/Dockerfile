@@ -61,17 +61,11 @@ RUN a2enmod rewrite ssl socache_shmcb && \
     a2ensite default-ssl
 
 # Copy REDCap source into the image (context must be the parent redcap_cypress_docker/ dir)
-COPY redcap_source/ /var/www/html/
+COPY ../redcap_source/ /var/www/html/
 
 # Ensure necessary directories exist with proper permissions
-RUN mkdir -p /var/www/html/edocs \
-             /var/www/html/temp \
-             /var/www/html/modules \
-             /var/www/html/redcap_file_repository && \
-    chown -R www-data:www-data /var/www/html/edocs \
-                               /var/www/html/temp \
-                               /var/www/html/modules \
-                               /var/www/html/redcap_file_repository
+RUN mkdir -p /var/www/html/redcap_file_repository && \
+    chown -R www-data:www-data /var/www/html/redcap_file_repository
 
 # Copy entrypoint and supporting files
 COPY CCTC_REDCap_Docker/entrypoint.sh /usr/local/bin/entrypoint.sh

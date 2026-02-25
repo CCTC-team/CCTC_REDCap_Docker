@@ -1,0 +1,28 @@
+# Exclude git history
+.git/
+**/.git/
+
+# Exclude Cypress test suite (large, not needed in the image)
+redcap_cypress/
+redcap_docker/
+CCTC_REDCap_Docker/volumes/
+
+# Exclude other REDCap version directories (only 15.5.33 is needed)
+redcap_source/redcap_v14.7.0/
+redcap_source/redcap_v15.9.1/
+
+# Exclude writable data directories (created at runtime by entrypoint)
+redcap_source/edocs/
+redcap_source/temp/
+redcap_source/redcap_file_repository/
+redcap_source/modules/
+
+# Exclude self-signed certs (generated at build time inside the image)
+CCTC_REDCap_Docker/mycert.crt
+CCTC_REDCap_Docker/mycert.key
+
+# Exclude docs and misc
+*.md
+*.xlsx
+*.csv
+Docs/
