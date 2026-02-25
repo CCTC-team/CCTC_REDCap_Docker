@@ -4,7 +4,7 @@ A self-contained Docker setup that runs REDCap with MariaDB, MailHog, and phpMyA
 
 ## Prerequisites
 
-- Docker and Docker Compose (via [Rancher Desktop](https://rancherdesktop.io/) or [Docker Desktop](https://www.docker.com/products/docker-desktop/))
+- Docker and Docker Compose ([Docker Desktop](https://www.docker.com/products/docker-desktop/))
 - Valid REDCap license (to obtain source files)
 
 ---
