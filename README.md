@@ -135,7 +135,7 @@ docker compose logs -f app
 ## Architecture
 
 - **app**: PHP 8.2/Apache with REDCap source baked into the image
-- **db**: MariaDB 10.5.29 with persistent volume
+- **db**: MariaDB 10.11 with persistent volume
 - **mailhog**: SMTP testing (captures all outgoing email)
 - **phpmyadmin**: Database management UI
 

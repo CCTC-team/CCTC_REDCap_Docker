@@ -23,7 +23,7 @@ services:
 
   db:
     container_name: redcap-db
-    image: mariadb:10.5.29
+    image: mariadb:10.11
     ports:
       - '${MYSQL_PORT:-3400}:3306'
     volumes:
