@@ -63,6 +63,10 @@ RUN a2enmod rewrite ssl socache_shmcb && \
 # Copy REDCap source into the image (context must be the parent redcap_cypress_docker/ dir)
 COPY ../redcap_source/ /var/www/html/
 
+# Fail early if REDCap source code is missing from redcap_source/
+RUN test -f /var/www/html/redcap_connect.php || \
+    (echo "ERROR: REDCap source code not found in redcap_source/. Download it before building." && exit 1)
+
 # Ensure necessary directories exist with proper permissions
 RUN mkdir -p /var/www/html/redcap_file_repository && \
     chown -R www-data:www-data /var/www/html/redcap_file_repository
