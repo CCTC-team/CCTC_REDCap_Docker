@@ -1,6 +1,6 @@
 # CCTC REDCap Docker
 
-A self-contained Docker setup that runs REDCap with MariaDB, MailHog, and phpMyAdmin. Place your REDCap source files, configure, and run `docker compose up --build`.
+A self-contained Docker setup that runs REDCap with MariaDB, MailHog, and phpMyAdmin. Place your REDCap source files, configure, and run `docker compose up --build -d`.
 
 ## Prerequisites
 
@@ -11,7 +11,13 @@ A self-contained Docker setup that runs REDCap with MariaDB, MailHog, and phpMyA
 
 ## Quick Start
 
-### 1. Place REDCap source files
+### 1. Clone the repo
+
+```bash
+git clone git@github.com:CCTC-team/CCTC_REDCap_Docker.git
+```
+
+### 2. Place REDCap source files
 
 Copy your REDCap installation files into the `redcap_source/` directory. The structure should look like:
 
@@ -31,7 +37,7 @@ redcap_source/
 └── ...
 ```
 
-### 2. Configure
+### 3. Configure
 
 Open a terminal and navigate into the `redcap_docker` folder:
 
@@ -47,17 +53,17 @@ cp .env.example .env
 
 Edit `.env` and set `REDCAP_VERSION` to match your version directory (e.g., `15.5.33`).
 
-### 3. Build and Run
+### 4. Build and Run
 
 From within the `redcap_docker` folder in your terminal, run:
 
 ```bash
-docker compose up --build
+docker compose up --build -d
 ```
 
 On first run, the database is automatically initialized with REDCap's schema, data, and test users.
 
-### 4. Access
+### 5. Access
 
 | Service    | URL                        |
 |------------|----------------------------|
@@ -108,7 +114,7 @@ docker compose up -d
 
 ### Rebuild after changes
 ```bash
-docker compose up --build
+docker compose up --build -d
 ```
 
 ### Change REDCap version
@@ -116,13 +122,13 @@ docker compose up --build
 2. Update `REDCAP_VERSION` in `redcap_docker/.env`
 3. From within `redcap_docker`, rebuild:
    ```bash
-   docker compose up --build
+   docker compose up --build -d
    ```
 
 ### Full database reset
 ```bash
 docker compose down -v
-docker compose up --build
+docker compose up --build -d
 ```
 
 ### View logs
