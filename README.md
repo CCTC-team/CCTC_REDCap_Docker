@@ -51,7 +51,7 @@ Copy the example environment file:
 cp .env.example .env
 ```
 
-Edit `.env` and set `REDCAP_VERSION` to match your version directory (e.g., `15.5.33`).
+Edit `.env` and set `REDCAP_VERSION` to match your version directory (e.g., `15.5.36`).
 
 ### 4. Build and Run
 
