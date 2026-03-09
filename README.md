@@ -23,7 +23,7 @@ Copy your REDCap installation files into the `redcap_source/` directory. The str
 
 ```
 redcap_source/
-├── redcap_v15.5.33/       # Version directory (name must match your version)
+├── redcap_v15.5.36/       # Version directory (name must match your version)
 ├── install.php
 ├── upgrade.php
 ├── redcap_connect.php

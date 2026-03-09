@@ -1,6 +1,6 @@
 FROM php:8.2.28-apache
 
-# REDCap version must be provided (e.g., 15.5.33)
+# REDCap version must be provided (e.g., 15.5.36)
 ARG REDCAP_VERSION
 RUN test -n "${REDCAP_VERSION}" || (echo "ERROR: REDCAP_VERSION build arg is required" && exit 1)
 
