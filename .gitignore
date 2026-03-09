@@ -4,3 +4,12 @@ redcap_source/*
 
 # macOS
 .DS_Store
+
+# IDE
+.vscode/
+
+# Temp files
+tmp/
+
+# REDCap Cypress
+redcap_cypress/

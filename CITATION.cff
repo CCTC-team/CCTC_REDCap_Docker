@@ -1,0 +1,22 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: CCTC REDCap Cypress Developer Toolkit
+message: >-
+  If you reference this software in scholarly articles,
+  please cite it as below.
+type: software
+authors:
+  - given-names: Mintoo
+    family-names: Xavier
+    email: mintoo.xavier1@nhs.net
+    affiliation: Cambridge University Hospitals NHS Foundation Trust
+repository-code: >-
+  https://github.com/CCTC-team/CCTC_REDCap_Docker/tree/redcap_val
+keywords:
+  - REDCap
+  - Cypress
+  - Test Framework
+  - Automated Testing
+license: MIT

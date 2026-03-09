@@ -6,10 +6,6 @@
 redcap_cypress/
 CCTC_REDCap_Docker/volumes/
 
-# Exclude other REDCap version directories (only 15.5.33 is needed)
-redcap_source/redcap_v14.7.0/
-redcap_source/redcap_v15.9.1/
-
 # Exclude writable data directories (created at runtime by entrypoint)
 redcap_source/edocs/
 redcap_source/temp/
