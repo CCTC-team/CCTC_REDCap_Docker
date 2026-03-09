@@ -42,7 +42,7 @@ redcap_source/
 Open a terminal and navigate into the `redcap_docker` folder:
 
 ```bash
-cd redcap_docker
+cd CCTC_REDCap_Docker/redcap_docker
 ```
 
 Copy the example environment file:
