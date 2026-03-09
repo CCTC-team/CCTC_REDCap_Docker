@@ -1,6 +1,6 @@
 # CCTC REDCap Docker
 
-A self-contained Docker setup that runs REDCap with MariaDB, MailHog, and phpMyAdmin. Place your REDCap source files, configure, and run `docker compose up --build -d`.
+A self-contained Docker setup that runs REDCap with MariaDB and MailHog. Place your REDCap source files, configure, and run `docker compose up --build -d`.
 
 ## Prerequisites
 
@@ -70,7 +70,6 @@ On first run, the database is automatically initialized with REDCap's schema, da
 | REDCap     | https://localhost:8443     |
 | REDCap     | http://localhost:8080      |
 | MailHog    | http://localhost:8025      |
-| phpMyAdmin | http://localhost:8081      |
 
 ---
 
@@ -143,7 +142,6 @@ docker compose logs -f app
 - **app**: PHP 8.2/Apache with REDCap source baked into the image
 - **db**: MariaDB 10.11 with persistent volume
 - **mailhog**: SMTP testing (captures all outgoing email)
-- **phpmyadmin**: Database management UI
 
 ---
 

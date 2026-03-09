@@ -54,19 +54,5 @@ services:
       - '${MAILHOG_UI_PORT:-8025}:8025'
     # Using in-memory storage (default) to avoid maildir permission issues
 
-  phpmyadmin:
-    container_name: redcap-phpmyadmin
-    image: phpmyadmin/phpmyadmin:latest
-    platform: linux/amd64
-    ports:
-      - '${PHPMYADMIN_PORT:-8081}:80'
-    environment:
-      - PMA_HOST=db
-      - PMA_PORT=3306
-      - PMA_USER=root
-      - PMA_PASSWORD=${MYSQL_ROOT_PASSWORD:-root}
-    depends_on:
-      - db
-
 volumes:
   mariadb_data:
