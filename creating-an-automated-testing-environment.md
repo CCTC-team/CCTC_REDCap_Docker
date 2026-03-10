@@ -1,6 +1,6 @@
 # Creating An Automation Environment
 
-If desired, it is complex but possible to create your own environment to run all automated tests yourself and fully reproduce this validation process at your institution.  We are unable to assist in setting up such an environment for other institions, but provides this basic documentation as a starting point.
+If desired, it is complex but possible to create your own environment to run all automated tests yourself and fully reproduce this validation process at your institution.  We are unable to assist in setting up such an environment for other institutions, but provides this basic documentation as a starting point.
 
 REDCap's automated tests should be executed against a REDCap test server instance mirroring your site's production REDCap instance. [CCTC REDCap Cypress Developer Toolkit](https://github.com/CCTC-team/redcap_cypress.git) may be a useful starting point. Rerunning tests against using a similar configuration will not provide feedback specific to your institution, or any results meaningfully different than CCTC's validation process.
 
