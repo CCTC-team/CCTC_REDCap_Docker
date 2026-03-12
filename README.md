@@ -153,3 +153,19 @@ docker compose logs -f app
 - The database is automatically initialized on first startup
 - Data persists in Docker volumes across restarts
 - Rebuilding (`--build`) does **not** reset the database — use `docker compose down -v` to reset
+
+## Upgrading REDCap
+Download upgrade.zip for your target REDCap version from the community page. Unzip it and copy the contents of the 'redcap' folder (the redcap_vxx.x.xx folder) into redcap_source/
+
+Either
+
+open the browser, go to 'Control Center' and press the upgrade button or
+navigate to https://localhost:8443/upgrade.php in your browser
+Note: if the upgrade.php doesn't work, try invoking upgrade.php inside the version folder (redcap_vxx.x.xx).
+
+https://localhost:8443/redcap_vxx.x.xx/upgrade.php
+Follow the instructions in the browser to upgrade REDCap
+
+Ensure the configuration checks in the ‘Control Center’ pass
+
+After upgrade, replace any outdated files in the redcap root directory (e.g. redcap_connect.php). If any exist, download the zip file from the ‘Configuration Check’ link in ‘Control Center’, unzip it and place it in the 'redcap_source' folder.
