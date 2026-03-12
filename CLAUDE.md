@@ -22,8 +22,7 @@ CCTC_REDCap_Docker/
 │   ├── php.ini               # Custom PHP configuration
 │   └── volumes/              # Docker volume data
 ├── redcap_source/            # REDCap source files (not committed)
-├── CONTRIBUTING.md           # Contribution guidelines
-└── creating-an-automated-testing-environment.md
+└── CONTRIBUTING.md           # Contribution guidelines
 ```
 
 ## Docker Services
