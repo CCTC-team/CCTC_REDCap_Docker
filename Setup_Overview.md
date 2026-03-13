@@ -10,9 +10,9 @@ This repository provides a self-contained, Dockerized REDCap instance paired wit
 
 | Component | Location | Purpose |
 |---|---|---|
-| **CCTC_REDCap_Docker** | `CCTC_REDCap_Docker/` | Docker environment running REDCap, MariaDB, and MailHog |
-| **redcap_cypress** | `CCTC_REDCap_Docker/redcap_cypress/` | Cypress + Gherkin BDD test framework |
-| **redcap_rsvc** | `CCTC_REDCap_Docker/redcap_cypress/redcap_rsvc/` | 755+ RSVC validation feature tests (Tiers A–D) |
+| **[CCTC_REDCap_Docker](https://github.com/CCTC-team/CCTC_REDCap_Docker)** | `CCTC_REDCap_Docker/` | Docker environment running REDCap, MariaDB, and MailHog |
+| **[redcap_cypress](https://github.com/CCTC-team/redcap_cypress)** | `CCTC_REDCap_Docker/redcap_cypress/` | Cypress + Gherkin BDD test framework |
+| **[redcap_rsvc](https://github.com/CCTC-team/redcap_rsvc)** | `CCTC_REDCap_Docker/redcap_cypress/redcap_rsvc/` | 755+ RSVC validation feature tests (Tiers A–D) |
 
 ### How They Fit Together
 
@@ -179,7 +179,7 @@ Custom CCTC feature files (not from RSVC) are located in the D folder.
 
 ## Step Definitions
 
-Core step definitions live in the **rctf** package (`node_modules/rctf/`). Additional CCTC-specific step definitions are in `redcap_cypress/cypress/support/step_definitions/`:
+Core step definitions live in the **[rctf](https://github.com/CCTC-team/rctf)** package (`node_modules/rctf/`). Additional CCTC-specific step definitions are in `redcap_cypress/cypress/support/step_definitions/`:
 
 | File | Purpose |
 |---|---|
