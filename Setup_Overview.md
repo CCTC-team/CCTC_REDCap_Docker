@@ -110,7 +110,7 @@ For more Docker operations and troubleshooting, see [`CCTC_REDCap_Docker/README.
 
 > Full details: [`CCTC_REDCap_Docker/redcap_cypress/README.md`](redcap_cypress/README.md)
 >
-> Folder structure reference: [`CCTC_REDCap_Docker/redcap_cypress/FOLDER_STRUCTURE.md`](redcap_cypress/FOLDER_STRUCTURE.md)
+> Folder structure reference: [`redcap_cypress/FOLDER_STRUCTURE.md`](https://github.com/CCTC-team/redcap_cypress/blob/redcap_val/FOLDER_STRUCTURE.md)
 
 ### Steps
 
@@ -231,6 +231,5 @@ How the specific commands above look will vary widely based on your environment.
 |---|---|
 | Docker environment setup | [`CCTC_REDCap_Docker/README.md`](README.md) |
 | Cypress testing framework | [`CCTC_REDCap_Docker/redcap_cypress/README.md`](redcap_cypress/README.md) |
-| Folder structure reference | [`CCTC_REDCap_Docker/redcap_cypress/FOLDER_STRUCTURE.md`](redcap_cypress/FOLDER_STRUCTURE.md) |
+| Folder structure reference | [`redcap_cypress/FOLDER_STRUCTURE.md`](https://github.com/CCTC-team/redcap_cypress/blob/redcap_val/FOLDER_STRUCTURE.md) |
 | RSVC test suite details | [`CCTC_REDCap_Docker/redcap_cypress/redcap_rsvc/README.md`](redcap_cypress/redcap_rsvc/README.md) |
-| Contribution guidelines | [`CCTC_REDCap_Docker/CONTRIBUTING.md`](CONTRIBUTING.md) |
