@@ -6,7 +6,7 @@ This document walks you through setting up the **CCTC REDCap Docker** environmen
 
 ## What This Project Is
 
-This repository provides a self-contained, Dockerized REDCap instance paired with an automated Cypress test suite. It has three main components:
+This repository provides a self-contained, Dockerised REDCap instance paired with an automated Cypress test suite. It has three main components:
 
 | Component | Location | Purpose |
 |---|---|---|
@@ -26,14 +26,14 @@ redcap_cypress (Cypress framework)
   └── Uses redcap_rsvc feature files + rctf step definitions
 ```
 
-Cypress connects to the Dockerized REDCap instance, resets the database to a clean state before each test, and executes Gherkin `.feature` files that validate REDCap functionality.
+Cypress connects to the Dockerised REDCap instance, resets the database to a clean state before each test, and executes Gherkin `.feature` files that validate REDCap functionality.
 
 ---
 
 ## Prerequisites
 
-- **Docker Desktop** — installed and running
-- **A valid REDCap license** — you must supply the REDCap source code yourself
+- **Docker** — installed and running
+- **A valid REDCap licence** — you must supply the REDCap source code yourself
 - **Node.js and npm** — for running Cypress
 - **Cypress ^15.10.0** — installed as part of `npm install`
 
@@ -108,7 +108,7 @@ For more Docker operations and troubleshooting, see [`CCTC_REDCap_Docker/README.
 
 ## Part 2: Set Up the Cypress Test Framework
 
-> Full details: [`CCTC_REDCap_Docker/redcap_cypress/README.md`](redcap_cypress/README.md)
+> Full details: [`CCTC_REDCap_Docker/redcap_cypress/README.md`](https://github.com/CCTC-team/redcap_cypress/blob/redcap_val//README.md)
 >
 > Folder structure reference: [`redcap_cypress/FOLDER_STRUCTURE.md`](https://github.com/CCTC-team/redcap_cypress/blob/redcap_val/FOLDER_STRUCTURE.md)
 
@@ -120,8 +120,8 @@ For more Docker operations and troubleshooting, see [`CCTC_REDCap_Docker/README.
    ```
 
 2. **Copy the example config files** (if they exist) and adjust settings in:
+   - `cypress.config.js` — update `baseUrl` (default `https://localhost:8443`) and `mailHogUrl` (default `http://localhost:8025`) to match your Docker setup
    - `cypress.env.json` — test users, REDCap version, MySQL connection, timezone
-   - `cypress.config.js` — Cypress configuration and custom tasks
 
 3. **Install dependencies**:
    ```bash
@@ -160,11 +160,11 @@ Runs all tests in the terminal without opening a browser window.
 
 ---
 
-## Test Organization (RSVC Tiers)
+## Test Organisation (RSVC Tiers)
 
-> Full details: [`CCTC_REDCap_Docker/redcap_cypress/redcap_rsvc/README.md`](redcap_cypress/redcap_rsvc/README.md)
+> Full details: [`CCTC_REDCap_Docker/redcap_cypress/redcap_rsvc/README.md`](https://github.com/CCTC-team/redcap_rsvc/blob/redcap_val/README.md)
 
-Feature tests are organized into four tiers under `redcap_rsvc/Feature Tests/`:
+Feature tests are organised into four tiers under `redcap_rsvc/Feature Tests/`:
 
 | Tier | Scope | Maintained By |
 |---|---|---|
@@ -179,7 +179,7 @@ Custom CCTC feature files (not from RSVC) are located in the D folder.
 
 ## Step Definitions
 
-Core step definitions live in the **[rctf](https://github.com/CCTC-team/rctf)** package (`node_modules/rctf/`). Additional CCTC-specific step definitions are in `redcap_cypress/cypress/support/step_definitions/`:
+Core step definitions live in the **[rctf](https://github.com/CCTC-team/rctf/tree/redcap_val)** package (`node_modules/rctf/`). Additional CCTC-specific step definitions are in `redcap_cypress/cypress/support/step_definitions/`:
 
 | File | Purpose |
 |---|---|
@@ -190,7 +190,7 @@ Core step definitions live in the **[rctf](https://github.com/CCTC-team/rctf)** 
 
 ## Quick-Start Checklist
 
-- [ ] Docker Desktop installed and running
+- [ ] Docker installed and running
 - [ ] REDCap source placed in `CCTC_REDCap_Docker/redcap_source/`
 - [ ] `.env` configured with correct `REDCAP_VERSION`
 - [ ] `docker compose up --build -d` completes successfully
@@ -199,6 +199,7 @@ Core step definitions live in the **[rctf](https://github.com/CCTC-team/rctf)** 
 - [ ] Node.js and npm installed
 - [ ] `npm install` completed in `redcap_cypress/`
 - [ ] `npm run redcap_rsvc:install` completed
+- [ ] `cypress.config.js` configured (`baseUrl` and `mailHogUrl` match your setup)
 - [ ] `cypress.env.json` configured
 - [ ] `npx cypress open` launches successfully
 
@@ -214,7 +215,7 @@ The following steps may be a useful checklist when configuring your institution'
 
 1. **Checkout REDCap and related source code** intended for deployment (includes REDCap source + could include hooks, plugins, EMs, etc.)
 2. Checkout **redcap_cypress** repository
-3. Generate **cypress.env.json** that matches the configuration you need. You could use **cypress.env.json.example** as a starting point. Set **redcap_version** and **MySQL** environment variables as needed for your environment.
+3. Generate **cypress.config.js** from **cypress.config.js.example** and update **baseUrl** and **mailHogUrl** to point to your REDCap and MailHog instances. Generate **cypress.env.json** from **cypress.env.json.example** and set **redcap_version** and **MySQL** environment variables as needed for your environment.
 4. Set desired **redcap_rsvc** version in **package.json** (e.g. `"redcap_rsvc": "git://github.com/CCTC-team/redcap_rsvc.git#v15.5.36"`)
 5. Install Cypress and RCTF dependencies: `npm install`
 6. Install REDCap RSVC feature tests (as defined in **package.json**): `npm run redcap_rsvc:install`

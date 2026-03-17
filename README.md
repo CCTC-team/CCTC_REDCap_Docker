@@ -4,8 +4,8 @@ A self-contained Docker setup that runs REDCap with MariaDB and MailHog. Place y
 
 ## Prerequisites
 
-- Docker and Docker Compose ([Docker Desktop](https://www.docker.com/products/docker-desktop/))
-- Valid REDCap license (to obtain source files)
+- Docker and Docker Compose ([Docker](https://www.docker.com))
+- Valid REDCap licence (to obtain source files)
 
 ---
 
@@ -19,7 +19,7 @@ git clone git@github.com:CCTC-team/CCTC_REDCap_Docker.git
 
 ### 2. Place REDCap source files
 
-Copy your REDCap installation files into the `redcap_source/` directory. The structure should look like:
+Copy your REDCap installation files (contents inside the redcap folder) into the `redcap_source/` directory. The structure should look like:
 
 ```
 redcap_source/
@@ -61,7 +61,7 @@ From within the `redcap_docker` folder in your terminal, run:
 docker compose up --build -d
 ```
 
-On first run, the database is automatically initialized with REDCap's schema, data, and test users.
+On first run, the database is automatically initialised with REDCap's schema, data, and test users.
 
 ### 5. Access
 
@@ -150,7 +150,7 @@ docker compose logs -f app
 - All `docker compose` commands must be run from inside the `redcap_docker/` directory
 - SSL uses self-signed certificates (browser warnings are expected)
 - MailHog captures all email sent by REDCap — no email leaves the system
-- The database is automatically initialized on first startup
+- The database is automatically initialised on first startup
 - Data persists in Docker volumes across restarts
 - Rebuilding (`--build`) does **not** reset the database — use `docker compose down -v` to reset
 

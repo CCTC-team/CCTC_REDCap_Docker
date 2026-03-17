@@ -15,7 +15,7 @@ CCTC_REDCap_Docker/
 ├── redcap_docker/
 │   ├── docker-compose.yml    # Defines 3 services: app, db, mailhog
 │   ├── Dockerfile            # PHP 8.2/Apache image with REDCap baked in
-│   ├── entrypoint.sh         # Auto-initializes DB on first run, starts Apache
+│   ├── entrypoint.sh         # Auto-initialises DB on first run, starts Apache
 │   ├── .env.example          # Template for environment variables
 │   ├── database.php          # Template for REDCap DB connection config
 │   ├── CreateUsers.sql       # Seeds 11 test users into the database
@@ -59,4 +59,4 @@ CCTC_REDCap_Docker/
 - When modifying `Dockerfile` or `entrypoint.sh`, always rebuild with `docker compose up --build`.
 - The `redcap_source/` directory is COPYed at build time, not mounted. Changes require a rebuild.
 - Do not commit `.env` (contains credentials) or `redcap_source/` (licensed software).
-- `REDCAP_SALT` must never change after the first database initialization.
+- `REDCAP_SALT` must never change after the first database initialisation.
