@@ -6,13 +6,14 @@ This document walks you through setting up the **CCTC REDCap Docker** environmen
 
 ## What This Project Is
 
-This repository provides a self-contained, Dockerised REDCap instance paired with an automated Cypress test suite. It has three main components:
+This repository provides a self-contained, Dockerised REDCap instance paired with an automated Cypress test suite. It has four main components:
 
 | Component | Location | Purpose |
 |---|---|---|
 | **[CCTC_REDCap_Docker](https://github.com/CCTC-team/CCTC_REDCap_Docker)** | `CCTC_REDCap_Docker/` | Docker environment running REDCap, MariaDB, and MailHog |
-| **[redcap_cypress](https://github.com/CCTC-team/redcap_cypress)** | `CCTC_REDCap_Docker/redcap_cypress/` | Cypress + Gherkin BDD test framework |
-| **[redcap_rsvc](https://github.com/CCTC-team/redcap_rsvc)** | `CCTC_REDCap_Docker/redcap_cypress/redcap_rsvc/` | 755+ RSVC validation feature tests (Tiers A–D) |
+| **[redcap_cypress](https://github.com/CCTC-team/redcap_cypress)** | `redcap_cypress/` | Cypress + Gherkin BDD test framework |
+| **[redcap_rsvc](https://github.com/CCTC-team/redcap_rsvc)** | `redcap_rsvc/` | 755+ RSVC validation feature tests (Tiers A–D) |
+| **[rctf](https://github.com/CCTC-team/rctf)** | `node_modules/rctf/` | Step definitions for the Gherkin feature tests in redcap_rsvc |
 
 ### How They Fit Together
 
@@ -108,7 +109,7 @@ For more Docker operations and troubleshooting, see [`CCTC_REDCap_Docker/README.
 
 ## Part 2: Set Up the Cypress Test Framework
 
-> Full details: [`CCTC_REDCap_Docker/redcap_cypress/README.md`](https://github.com/CCTC-team/redcap_cypress/blob/redcap_val//README.md)
+> Full details: [`redcap_cypress/README.md`](https://github.com/CCTC-team/redcap_cypress/blob/redcap_val//README.md)
 >
 > Folder structure reference: [`redcap_cypress/FOLDER_STRUCTURE.md`](https://github.com/CCTC-team/redcap_cypress/blob/redcap_val/FOLDER_STRUCTURE.md)
 
@@ -162,7 +163,7 @@ Runs all tests in the terminal without opening a browser window.
 
 ## Test Organisation (RSVC Tiers)
 
-> Full details: [`CCTC_REDCap_Docker/redcap_cypress/redcap_rsvc/README.md`](https://github.com/CCTC-team/redcap_rsvc/blob/redcap_val/README.md)
+> Full details: [`redcap_rsvc/README.md`](https://github.com/CCTC-team/redcap_rsvc/blob/redcap_val/README.md)
 
 Feature tests are organised into four tiers under `redcap_rsvc/Feature Tests/`:
 
@@ -230,7 +231,7 @@ How the specific commands above look will vary widely based on your environment.
 
 | Document | Location |
 |---|---|
-| Docker environment setup | [`CCTC_REDCap_Docker/README.md`](README.md) |
-| Cypress testing framework | [`CCTC_REDCap_Docker/redcap_cypress/README.md`](redcap_cypress/README.md) |
+| Docker environment setup | [`CCTC_REDCap_Docker/README.md`](https://github.com/CCTC-team/CCTC_REDCap_Docker/blob/redcap_val/README.md) |
+| Cypress testing framework | [`redcap_cypress/README.md`](https://github.com/CCTC-team/redcap_cypress/blob/redcap_val/README.md) |
 | Folder structure reference | [`redcap_cypress/FOLDER_STRUCTURE.md`](https://github.com/CCTC-team/redcap_cypress/blob/redcap_val/FOLDER_STRUCTURE.md) |
-| RSVC test suite details | [`CCTC_REDCap_Docker/redcap_cypress/redcap_rsvc/README.md`](redcap_cypress/redcap_rsvc/README.md) |
+| RSVC test suite details | [`redcap_rsvc/README.md`](https://github.com/CCTC-team/redcap_rsvc/blob/redcap_val/README.md) |
