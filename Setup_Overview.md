@@ -210,7 +210,7 @@ Core step definitions live in the **[rctf](https://github.com/CCTC-team/rctf/tre
 
 It is complex but possible to create your own environment to run all automated tests and fully reproduce this validation process at your institution. We are unable to assist in setting up such an environment for other institutions, but provide this documentation as a starting point.
 
-REDCap's automated tests should be executed against a REDCap test server instance mirroring your site's production REDCap instance. [CCTC REDCap Cypress Developer Toolkit](https://github.com/CCTC-team/redcap_cypress.git) may be a useful starting point. To produce meaningful results, tests should be tailored to your institution's specific configuration — simply rerunning them with a similar setup will duplicate CCTC's validation without adding institution-specific value.
+REDCap's automated tests should be executed against a REDCap test server instance mirroring your institution's production REDCap instance. [CCTC REDCap Cypress Developer Toolkit](https://github.com/CCTC-team/redcap_cypress.git) may be a useful starting point. To produce meaningful results, tests should be tailored to your institution's specific configuration — simply rerunning them with a similar setup will duplicate CCTC's validation without adding institution-specific value.
 
 The following steps may be a useful checklist when configuring your institution's automation environment:
 
