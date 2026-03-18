@@ -2,6 +2,14 @@
 
 A self-contained Docker setup that runs REDCap with MariaDB and MailHog. Place your REDCap source files, configure, and run `docker compose up --build -d`.
 
+---
+
+## Who are we
+
+The Cambridge Cancer Trials Centre (CCTC) is a collaboration between Cambridge University Hospitals NHS Foundation Trust, the University of Cambridge, and Cancer Research UK. Founded in 2007, CCTC designs and conducts clinical trials and studies to improve outcomes for patients with cancer or those at risk of developing it. In 2011, CCTC began hosting the Cambridge Clinical Trials Unit - Cancer Theme (CCTU-CT).
+
+CCTC has two divisions: Cancer Theme, which coordinates trial delivery, and Clinical Operations.
+
 ## Prerequisites
 
 - Docker and Docker Compose ([Docker](https://www.docker.com))
@@ -169,11 +177,3 @@ Follow the instructions in the browser to upgrade REDCap
 Ensure the configuration checks in the ‘Control Center’ pass
 
 After upgrade, replace any outdated files in the redcap root directory (e.g. redcap_connect.php). If any exist, download the zip file from the ‘Configuration Check’ link in ‘Control Center’, unzip it and place it in the 'redcap_source' folder.
-
----
-
-## Who are we
-
-The Cambridge Cancer Trials Centre (CCTC) is a collaboration between Cambridge University Hospitals NHS Foundation Trust, the University of Cambridge, and Cancer Research UK. Founded in 2007, CCTC designs and conducts clinical trials and studies to improve outcomes for patients with cancer or those at risk of developing it. In 2011, CCTC began hosting the Cambridge Clinical Trials Unit - Cancer Theme (CCTU-CT).
-
-CCTC has two divisions: Cancer Theme, which coordinates trial delivery, and Clinical Operations.
