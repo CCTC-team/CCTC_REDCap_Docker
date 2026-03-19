@@ -28,6 +28,7 @@ services:
       - '${MYSQL_PORT:-3400}:3306'
     volumes:
       - mariadb_data:/var/lib/mysql
+      - ./Audit_Analysis_Reports:/var/lib/mysql/Audit_Analysis_Reports
     environment:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD:-root}
       - MYSQL_DATABASE=${MYSQL_DATABASE:-redcap}
