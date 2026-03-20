@@ -145,10 +145,18 @@ docker compose logs -f app
 
 ---
 
+## Data Integrity Checks
+
+The `redcap_docker/Audit_Analysis_Reports/` directory is a bind mount into the MariaDB container (`/var/lib/mysql/Audit_Analysis_Reports`). When running scripts from the [REDCap_Data_Integrity_Checks](https://github.com/CCTC-team/REDCap_Data_Integrity_Checks) repository, the results will be written here and available on your host machine.
+
+This directory is git-ignored and will not be committed.
+
+---
+
 ## Architecture
 
 - **app**: PHP 8.2/Apache with REDCap source baked into the image
-- **db**: MariaDB 10.11 with persistent volume
+- **db**: MariaDB 10.11 with persistent volume and `Audit_Analysis_Reports` bind mount for data integrity check results
 - **mailhog**: SMTP testing (captures all outgoing email)
 
 ---

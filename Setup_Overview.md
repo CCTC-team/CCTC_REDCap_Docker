@@ -14,17 +14,20 @@ This repository provides a self-contained, Dockerised REDCap instance paired wit
 | **[redcap_cypress](https://github.com/CCTC-team/redcap_cypress)** | `redcap_cypress/` | Cypress + Gherkin BDD test framework |
 | **[redcap_rsvc](https://github.com/CCTC-team/redcap_rsvc)** | `redcap_rsvc/` | 755+ RSVC validation feature tests (Tiers A–D) |
 | **[rctf](https://github.com/CCTC-team/rctf)** | `node_modules/rctf/` | Step definitions for the Gherkin feature tests in redcap_rsvc |
+| **[REDCap_Data_Integrity_Checks](https://github.com/CCTC-team/REDCap_Data_Integrity_Checks)** | External repo | SQL scripts for data integrity checks; results output to `redcap_docker/Audit_Analysis_Reports/` |
 
 ### How They Fit Together
 
 ```
 CCTC_REDCap_Docker (Docker containers)
   └── Runs REDCap + MariaDB + MailHog
-        ▲
-        │  tests run against
-        │
-redcap_cypress (Cypress framework)
-  └── Uses redcap_rsvc feature files + rctf step definitions
+        ▲                        │
+        │  tests run against     │  results written to
+        │                        ▼
+redcap_cypress               redcap_docker/Audit_Analysis_Reports/
+  └── Uses redcap_rsvc         └── Output from REDCap_Data_Integrity_Checks scripts
+      feature files +
+      rctf step definitions
 ```
 
 Cypress connects to the Dockerised REDCap instance, resets the database to a clean state before each test, and executes Gherkin `.feature` files that validate REDCap functionality.

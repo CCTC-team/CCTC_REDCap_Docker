@@ -13,3 +13,6 @@ tmp/
 
 # REDCap Cypress
 redcap_cypress/
+
+# Audit reports
+redcap_docker/Audit_Analysis_Reports/

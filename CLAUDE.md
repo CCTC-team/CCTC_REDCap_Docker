@@ -20,6 +20,7 @@ CCTC_REDCap_Docker/
 │   ├── database.php          # Template for REDCap DB connection config
 │   ├── CreateUsers.sql       # Seeds 11 test users into the database
 │   ├── php.ini               # Custom PHP configuration
+│   ├── Audit_Analysis_Reports/ # Data integrity check results (git-ignored, bind-mounted into db container)
 │   └── volumes/              # Docker volume data
 ├── redcap_source/            # REDCap source files (not committed)
 └── CONTRIBUTING.md           # Contribution guidelines
@@ -28,7 +29,7 @@ CCTC_REDCap_Docker/
 ## Docker Services
 
 - **app (redcap-app)**: PHP 8.2.28/Apache on ports 8080 (HTTP) and 8443 (HTTPS). REDCap source is COPYed into the image at build time, not mounted. Includes ImageMagick for PDF support.
-- **db (redcap-db)**: MariaDB 10.11 on port 3400. Uses named volume `mariadb_data` for persistence.
+- **db (redcap-db)**: MariaDB 10.11 on port 3400. Uses named volume `mariadb_data` for persistence. Bind-mounts `redcap_docker/Audit_Analysis_Reports` to `/var/lib/mysql/Audit_Analysis_Reports` for [REDCap_Data_Integrity_Checks](https://github.com/CCTC-team/REDCap_Data_Integrity_Checks) output.
 - **mailhog (redcap-mailhog)**: Email testing on ports 1025 (SMTP) and 8025 (Web UI). Captures all outgoing email.
 
 ## Key Implementation Details
