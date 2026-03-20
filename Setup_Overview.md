@@ -162,6 +162,29 @@ npx cypress run
 
 Runs all tests in the terminal without opening a browser window.
 
+### Test Reports (Mochawesome)
+
+Test results are automatically saved as JSON files in `cypress/results/json/` after each run. To generate a combined HTML report:
+
+```bash
+# Generate HTML report from all JSON results
+npm run report
+```
+
+This creates `cypress/results/html/test-report.html` — open it in a browser to view pass/fail results, durations, and error details.
+
+To customise the report filename per run, set the `REPORT_NAME` environment variable:
+
+```bash
+REPORT_NAME=v15.5.36-smoke npx cypress run --browser chrome --spec "..."
+```
+
+To clear old results before a fresh run:
+
+```bash
+npm run report:clean
+```
+
 ---
 
 ## Test Organisation (RSVC Tiers)
