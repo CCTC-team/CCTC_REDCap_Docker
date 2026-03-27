@@ -97,6 +97,7 @@ if [ "${TABLE_COUNT}" = "0" ]; then
         UPDATE redcap_config SET value = 'CCTC Administrator' WHERE field_name = 'project_contact_name';
         UPDATE redcap_config SET value = '/var/www/html/redcap_file_repository/' WHERE field_name = 'edoc_path';
         UPDATE redcap_config SET value = 'https://localhost:${REDCAP_HTTPS_PORT:-8443}/' WHERE field_name = 'redcap_base_url';
+        UPDATE redcap_config SET value = '/var/www/html/hook_functions.php' WHERE field_name = 'hook_functions_file';
     "
 
     # Create test users
