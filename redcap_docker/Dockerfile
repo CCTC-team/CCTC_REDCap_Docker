@@ -52,7 +52,9 @@ RUN echo 'sendmail_path = "/usr/bin/mhsendmail --smtp-addr=mailhog:1025"' >> /us
 RUN openssl req -x509 -nodes -days 3650 -newkey rsa:2048 \
     -keyout /etc/ssl/private/mycert.key \
     -out /etc/ssl/certs/mycert.crt \
-    -subj "/C=UK/ST=Cambridge/L=Cambridge/O=CCTC/OU=Programming/CN=localhost"
+    -subj "/C=UK/ST=Cambridge/L=Cambridge/O=CCTC/OU=Programming/CN=localhost" \
+    -addext "subjectAltName=DNS:localhost,IP:127.0.0.1" \
+    -addext "authorityKeyIdentifier=keyid,issuer"
 
 # Enable Apache modules and SSL
 RUN a2enmod rewrite ssl socache_shmcb && \
