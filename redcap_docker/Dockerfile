@@ -73,17 +73,6 @@ RUN test -f /var/www/html/redcap_connect.php || \
 RUN mkdir -p /var/www/html/redcap_file_repository && \
     chown -R www-data:www-data /var/www/html/redcap_file_repository
 
-# EMs (e.g. versioning) inject code into core REDCap files on system_enable.
-# Grant world-writable perms on the specific files those EMs mutate so
-# is_writable() returns true under www-data. Files live under the
-# version-specific docroot dir: /var/www/html/redcap_v${REDCAP_VERSION}/.
-RUN chmod 666 \
-    /var/www/html/redcap_v${REDCAP_VERSION}/Classes/Piping.php \
-    /var/www/html/redcap_v${REDCAP_VERSION}/Classes/Hooks.php \
-    /var/www/html/redcap_v${REDCAP_VERSION}/Classes/DataEntry.php \
-    /var/www/html/redcap_v${REDCAP_VERSION}/Resources/js/DataQuality.js \
-    /var/www/html/redcap_v${REDCAP_VERSION}/DataEntry/index.php
-
 # Copy entrypoint and supporting files
 COPY redcap_docker/entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh

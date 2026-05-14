@@ -34,6 +34,33 @@ mkdir -p /var/www/html/redcap_file_repository /var/www/html/temp /var/www/html/m
 chown -R www-data:www-data /var/www/html/redcap_file_repository /var/www/html/temp /var/www/html/modules
 
 # ============================================================
+# STEP 2b: Fix permissions for external module file writes
+# ============================================================
+EM_FILES=(
+  "Classes/Piping.php"
+  "Classes/Hooks.php"
+  "Classes/DataEntry.php"
+  "Resources/js/DataQuality.js"
+  "DataEntry/index.php"
+)
+
+REDCAP_CORE="/var/www/html/redcap_v${REDCAP_VERSION}"
+
+if [ -d "$REDCAP_CORE" ]; then
+  for f in "${EM_FILES[@]}"; do
+    if [ -f "$REDCAP_CORE/$f" ]; then
+      chown www-data:www-data "$REDCAP_CORE/$f"
+      chmod 664 "$REDCAP_CORE/$f"
+      echo "[entrypoint] Fixed permissions: $f"
+    else
+      echo "[entrypoint] WARNING: $f not found in $REDCAP_CORE"
+    fi
+  done
+else
+  echo "[entrypoint] WARNING: $REDCAP_CORE not found, skipping EM permission fix"
+fi
+
+# ============================================================
 # STEP 3: Wait for MariaDB to be ready
 # ============================================================
 echo "[entrypoint] Waiting for MariaDB..."
