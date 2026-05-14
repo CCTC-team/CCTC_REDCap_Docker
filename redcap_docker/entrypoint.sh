@@ -30,8 +30,8 @@ echo "[entrypoint] database.php configured (host=${MYSQL_HOSTNAME}, db=${MYSQL_D
 # ============================================================
 # STEP 2: Ensure writable directories exist
 # ============================================================
-mkdir -p /var/www/html/edocs /var/www/html/temp /var/www/html/modules
-chown -R www-data:www-data /var/www/html/edocs /var/www/html/temp /var/www/html/modules
+mkdir -p /var/www/html/redcap_file_repository /var/www/html/temp /var/www/html/modules
+chown -R www-data:www-data /var/www/html/redcap_file_repository /var/www/html/temp /var/www/html/modules
 
 # ============================================================
 # STEP 3: Wait for MariaDB to be ready
@@ -111,6 +111,24 @@ if [ "${TABLE_COUNT}" = "0" ]; then
 else
     echo "[entrypoint] REDCap database already initialized. Skipping init."
 fi
+
+# ============================================================
+# STEP 4b: Ensure per-project edoc subfolders exist on disk
+# ============================================================
+# REDCap stores each project's edocs under redcap_file_repository/<subfolder>/
+# (subfolder name = redcap_projects.local_storage_subfolder, e.g. "pid2").
+# If the row exists in the DB but the directory doesn't, exports fail silently
+# (fopen returns false -> storeExportFile returns false -> "Export failed").
+# Recreate any missing subfolders here so the dev env is resilient across
+# rebuilds and bind-mount swaps.
+mysql -h "${MYSQL_HOSTNAME}" -u "${MYSQL_USER}" -p"${MYSQL_PASSWORD}" -N -e "
+    SELECT local_storage_subfolder FROM ${MYSQL_DATABASE}.redcap_projects
+    WHERE local_storage_subfolder IS NOT NULL AND local_storage_subfolder != '';" 2>/dev/null \
+  | while read subdir; do
+        [ -z "${subdir}" ] && continue
+        mkdir -p "/var/www/html/redcap_file_repository/${subdir}"
+        chown www-data:www-data "/var/www/html/redcap_file_repository/${subdir}"
+    done
 
 # ============================================================
 # STEP 5: Configure internal SSL for REDCap self-check

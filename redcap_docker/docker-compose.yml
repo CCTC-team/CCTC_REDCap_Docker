@@ -20,6 +20,8 @@ services:
       - MYSQL_PASSWORD=${MYSQL_ROOT_PASSWORD:-root}
       - REDCAP_SALT=${REDCAP_SALT:-12345678}
       - REDCAP_HTTPS_PORT=${REDCAP_HTTPS_PORT:-8443}
+    volumes:
+      - ../redcap_source/redcap_file_repository:/var/www/html/redcap_file_repository
 
   db:
     container_name: redcap-db
