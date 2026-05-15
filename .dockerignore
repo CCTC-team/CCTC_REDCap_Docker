@@ -7,9 +7,7 @@ redcap_cypress/
 CCTC_REDCap_Docker/volumes/
 
 # Exclude writable data directories (created at runtime by entrypoint)
-redcap_source/edocs/
 redcap_source/temp/
-redcap_source/redcap_file_repository/
 
 # Exclude self-signed certs (generated at build time inside the image)
 CCTC_REDCap_Docker/mycert.crt
