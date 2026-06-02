@@ -30,8 +30,18 @@ echo "[entrypoint] database.php configured (host=${MYSQL_HOSTNAME}, db=${MYSQL_D
 # ============================================================
 # STEP 2: Ensure writable directories exist
 # ============================================================
+# redcap_file_repository is a bind-mount (see docker-compose.yml). The host
+# directory's ownership (often a numeric uid like 1005:1003 that does not exist
+# in the container) shadows the image's. Apache runs as www-data (uid 33) with
+# no extra groups, so unless these are www-data-owned, exports fail to write
+# the pidN subfolders. Re-assert ownership and setgid dir perms on every boot
+# so this self-heals across rebuilds and bind-mount swaps.
 mkdir -p /var/www/html/redcap_file_repository /var/www/html/temp /var/www/html/modules
 chown -R www-data:www-data /var/www/html/redcap_file_repository /var/www/html/temp /var/www/html/modules
+# 2775 (drwxrwsr-x) on all dirs: owner+group rwx, setgid so new pidN folders
+# inherit the group; ug+rw on files. Tolerate odd FS that blocks chmod.
+find /var/www/html/redcap_file_repository -type d -exec chmod 2775 {} \; 2>/dev/null || true
+find /var/www/html/redcap_file_repository -type f -exec chmod ug+rw {} \; 2>/dev/null || true
 
 # ============================================================
 # STEP 2b: Fix permissions for external module file writes
@@ -155,6 +165,7 @@ mysql -h "${MYSQL_HOSTNAME}" -u "${MYSQL_USER}" -p"${MYSQL_PASSWORD}" -N -e "
         [ -z "${subdir}" ] && continue
         mkdir -p "/var/www/html/redcap_file_repository/${subdir}"
         chown www-data:www-data "/var/www/html/redcap_file_repository/${subdir}"
+        chmod 2775 "/var/www/html/redcap_file_repository/${subdir}"
     done
 
 # ============================================================

@@ -69,10 +69,6 @@ COPY ../redcap_source/ /var/www/html/
 RUN test -f /var/www/html/redcap_connect.php || \
     (echo "ERROR: REDCap source code not found in redcap_source/. Download it before building." && exit 1)
 
-# Ensure necessary directories exist with proper permissions
-RUN mkdir -p /var/www/html/redcap_file_repository && \
-    chown -R www-data:www-data /var/www/html/redcap_file_repository
-
 # Copy entrypoint and supporting files
 COPY redcap_docker/entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
