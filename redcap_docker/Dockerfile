@@ -1,4 +1,4 @@
-FROM php:8.2.28-apache
+FROM php:8.2.30-apache
 
 # REDCap version must be provided (e.g., 15.5.36)
 ARG REDCAP_VERSION
@@ -41,8 +41,18 @@ RUN docker-php-ext-configure zip && \
 RUN pecl install imagick && \
     docker-php-ext-enable imagick
 
-# Configure ImageMagick for PDF support
-RUN sed -i 's|policy domain="coder" rights="none" pattern="PDF"|policy domain="coder" rights="read|write" pattern="PDF"|g' /etc/ImageMagick-6/policy.xml
+# Configure ImageMagick for PDF support.
+# libmagickwand-dev (used to build the imagick PHP ext) does not ship a
+# policy.xml. If one is present (ImageMagick 6 or 7), relax the PDF coder
+# policy from "none" to "read|write"; if absent, PDF is already unrestricted.
+# Use '#' as the sed delimiter so the '|' in read|write isn't a delimiter.
+RUN policy=$(find /etc/ImageMagick-* -name policy.xml 2>/dev/null | head -n1); \
+    if [ -n "$policy" ]; then \
+        sed -i 's#rights="none" pattern="PDF"#rights="read|write" pattern="PDF"#g' "$policy" && \
+        echo "Patched ImageMagick PDF policy at $policy"; \
+    else \
+        echo "No ImageMagick policy.xml found; PDF coder already unrestricted"; \
+    fi
 
 # Copy PHP configuration
 COPY redcap_docker/php.ini /usr/local/etc/php/php.ini

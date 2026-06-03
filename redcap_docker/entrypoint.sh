@@ -76,7 +76,7 @@ fi
 echo "[entrypoint] Waiting for MariaDB..."
 MAX_RETRIES=30
 RETRY_COUNT=0
-until mysql -h "${MYSQL_HOSTNAME}" -u "${MYSQL_USER}" -p"${MYSQL_PASSWORD}" -e "SELECT 1" &>/dev/null; do
+until mysql --skip-ssl -h "${MYSQL_HOSTNAME}" -u "${MYSQL_USER}" -p"${MYSQL_PASSWORD}" -e "SELECT 1" &>/dev/null; do
     RETRY_COUNT=$((RETRY_COUNT + 1))
     if [ $RETRY_COUNT -ge $MAX_RETRIES ]; then
         echo "[entrypoint] ERROR: MariaDB not ready after ${MAX_RETRIES} attempts."
@@ -90,7 +90,7 @@ echo "[entrypoint] MariaDB is ready."
 # ============================================================
 # STEP 4: Initialize REDCap database if this is the first run
 # ============================================================
-TABLE_COUNT=$(mysql -h "${MYSQL_HOSTNAME}" -u "${MYSQL_USER}" -p"${MYSQL_PASSWORD}" \
+TABLE_COUNT=$(mysql --skip-ssl -h "${MYSQL_HOSTNAME}" -u "${MYSQL_USER}" -p"${MYSQL_PASSWORD}" \
     -N -e "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema='${MYSQL_DATABASE}' AND table_name='redcap_config';" 2>/dev/null)
 
 if [ "${TABLE_COUNT}" = "0" ]; then
@@ -114,17 +114,17 @@ if [ "${TABLE_COUNT}" = "0" ]; then
 
     # Run install.sql (schema creation)
     echo "[entrypoint] Running install.sql (schema)..."
-    mysql -h "${MYSQL_HOSTNAME}" -u "${MYSQL_USER}" -p"${MYSQL_PASSWORD}" \
+    mysql --skip-ssl -h "${MYSQL_HOSTNAME}" -u "${MYSQL_USER}" -p"${MYSQL_PASSWORD}" \
         "${MYSQL_DATABASE}" < "${INSTALL_SQL}"
 
     # Run install_data.sql (initial data)
     echo "[entrypoint] Running install_data.sql (initial data)..."
-    mysql -h "${MYSQL_HOSTNAME}" -u "${MYSQL_USER}" -p"${MYSQL_PASSWORD}" \
+    mysql --skip-ssl -h "${MYSQL_HOSTNAME}" -u "${MYSQL_USER}" -p"${MYSQL_PASSWORD}" \
         "${MYSQL_DATABASE}" < "${INSTALL_DATA_SQL}"
 
     # Set REDCap version, auth method, and base URL
     echo "[entrypoint] Configuring REDCap settings..."
-    mysql -h "${MYSQL_HOSTNAME}" -u "${MYSQL_USER}" -p"${MYSQL_PASSWORD}" \
+    mysql --skip-ssl -h "${MYSQL_HOSTNAME}" -u "${MYSQL_USER}" -p"${MYSQL_PASSWORD}" \
         "${MYSQL_DATABASE}" -e "
         UPDATE redcap_config SET value = '${REDCAP_VERSION}' WHERE field_name = 'redcap_version';
         REPLACE INTO redcap_history_version (\`date\`, redcap_version) VALUES (CURDATE(), '${REDCAP_VERSION}');
@@ -140,7 +140,7 @@ if [ "${TABLE_COUNT}" = "0" ]; then
     # Create test users
     if [ -f /usr/local/share/redcap/CreateUsers.sql ]; then
         echo "[entrypoint] Creating test users..."
-        mysql -h "${MYSQL_HOSTNAME}" -u "${MYSQL_USER}" -p"${MYSQL_PASSWORD}" \
+        mysql --skip-ssl -h "${MYSQL_HOSTNAME}" -u "${MYSQL_USER}" -p"${MYSQL_PASSWORD}" \
             "${MYSQL_DATABASE}" < /usr/local/share/redcap/CreateUsers.sql
     fi
 
@@ -158,7 +158,7 @@ fi
 # (fopen returns false -> storeExportFile returns false -> "Export failed").
 # Recreate any missing subfolders here so the dev env is resilient across
 # rebuilds and bind-mount swaps.
-mysql -h "${MYSQL_HOSTNAME}" -u "${MYSQL_USER}" -p"${MYSQL_PASSWORD}" -N -e "
+mysql --skip-ssl -h "${MYSQL_HOSTNAME}" -u "${MYSQL_USER}" -p"${MYSQL_PASSWORD}" -N -e "
     SELECT local_storage_subfolder FROM ${MYSQL_DATABASE}.redcap_projects
     WHERE local_storage_subfolder IS NOT NULL AND local_storage_subfolder != '';" 2>/dev/null \
   | while read subdir; do
