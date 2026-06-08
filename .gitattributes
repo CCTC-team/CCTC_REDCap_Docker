@@ -1,0 +1,3 @@
+redcap_docker/entrypoint.sh text eol=lf
+redcap_docker/Dockerfile    text eol=lf
+redcap_docker/*.sh          text eol=lf
