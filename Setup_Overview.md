@@ -138,6 +138,25 @@ For more Docker operations and troubleshooting, see [`CCTC_REDCap_Docker/README.
    ```
    This pulls the RSVC test suite into `redcap_rsvc/`.
 
+### Test Fixtures — `redcap_rsvc/Files/` → `cypress/fixtures/`
+
+Some tests rely on supporting assets that ship inside the RSVC repo under `redcap_rsvc/Files/` — data dictionaries, import files, CDISC files, XSD schemas, and **verified export references** (`expected_exports/`, the golden files that data-export tests compare downloads against).
+
+These assets are **not** read from `redcap_rsvc/Files/` directly. The test framework reads them from `cypress/fixtures/`, and the only thing that copies them there is this step inside `redcap_rsvc:move_files` (run as part of `redcap_rsvc:install`):
+
+```bash
+cp -a redcap_rsvc/Files/* cypress/fixtures/
+```
+
+> **Important:** Neither `npm install` nor a plain `git checkout`/`git pull` of the RSVC repo populates `cypress/fixtures/`. Updating the source files in `redcap_rsvc/Files/` (e.g. tracking a new RSVC version, or re-recording a verified export reference) does **nothing** until you re-run the copy:
+>
+> ```bash
+> # from redcap_cypress/, after changing anything under redcap_rsvc/Files/
+> cp -a redcap_rsvc/Files/* cypress/fixtures/
+> ```
+>
+> `cypress/fixtures/` is git-ignored and treated as generated/disposable — always edit the source under `redcap_rsvc/Files/`, never the copy under `cypress/fixtures/`.
+
 ### Important Warning
 
 > **Never use production database credentials in `cypress.env.json`.** The test suite resets the database to a clean state before each feature test. This will destroy all data in the target database.
