@@ -1,0 +1,27 @@
+# Compose override that makes the REDCap stack safe to run as several isolated
+# instances at once (one per test shard). Layer it on top of docker-compose.yml:
+#
+#   docker compose -p cctc-shard-1 --env-file .env.shard-1 \
+#     -f docker-compose.yml -f docker-compose.ci-shard.yml up -d
+#
+# It fixes the two things in the base file that block multi-instance use:
+#   * the three hardcoded container_names (would collide across projects), and
+#   * the app's shared host bind for redcap_file_repository (would let shards see
+#     each other's uploaded files) — replaced with a per-project named volume.
+#
+# Port isolation is handled separately, by the offset ports in the per-shard
+# .env file (see shard-env.sh / shard-stack.sh). mariadb_data stays a named
+# volume in the base file, which Compose already namespaces per project, so each
+# shard gets its own database with no override needed here.
+services:
+  app:
+    container_name: ${SHARD_PROJECT}-app
+    volumes: !override
+      - app_file_repository:/var/www/html/redcap_file_repository
+  db:
+    container_name: ${SHARD_PROJECT}-db
+  mailhog:
+    container_name: ${SHARD_PROJECT}-mailhog
+
+volumes:
+  app_file_repository:
