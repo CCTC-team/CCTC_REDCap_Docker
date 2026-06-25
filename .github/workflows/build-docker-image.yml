@@ -1,0 +1,107 @@
+name: Build and Push REDCap Docker Image
+
+# Produces the shared, prebuilt REDCap base image consumed by redcap_cypress and every
+# external-module repo. It lives HERE (next to the Dockerfile/php.ini it builds) so the
+# image is rebuilt exactly when the REDCap build actually changes — never on a consumer's
+# test run. Consumers pull the tag; they never build REDCap themselves.
+#
+# Version source of truth: redcap_docker/.env.example (the tracked file; .env is gitignored).
+# Image: ghcr.io/cctc-team/cctc_redcap_docker/redcap-env:<version> (+ latest, + short sha).
+
+on:
+  push:
+    branches:
+      - redcap_val
+    paths:
+      - 'redcap_docker/Dockerfile'
+      - 'redcap_docker/php.ini'
+      - 'redcap_docker/entrypoint.sh'
+      - 'redcap_docker/.env.example'
+      - '.github/workflows/build-docker-image.yml'
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Extra Docker image tag (optional)'
+        required: false
+        default: ''
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}/redcap-env
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Read REDCap version from redcap_docker/.env.example
+        run: |
+          REDCAP_VERSION=$(grep -E '^REDCAP_VERSION=' redcap_docker/.env.example | cut -d= -f2 | tr -d '[:space:]')
+          test -n "${REDCAP_VERSION}" || (echo "ERROR: REDCAP_VERSION not found in redcap_docker/.env.example" && exit 1)
+          echo "REDCAP_VERSION=${REDCAP_VERSION}" >> $GITHUB_ENV
+          echo "REDCAP_VERSION=${REDCAP_VERSION}"
+
+      - name: Get REDCap Source
+        env:
+          GH_PAT: ${{ secrets.CCTC_TEAM_PAT }}
+        run: |
+          # redcap_source/ is not tracked here (proprietary). Clone it at the pinned version
+          # into ./redcap_source so the Dockerfile (COPY redcap_source/ ...) can pick it up.
+          if [[ "${{ env.REDCAP_VERSION }}" = "99.99.99" ]]; then
+            export BRANCH=main
+          else
+            export BRANCH=${{ env.REDCAP_VERSION }}
+          fi
+
+          cd redcap_source
+          git clone --depth=1 --branch=$BRANCH \
+            https://x-access-token:${GH_PAT}@github.com/CCTC-team/redcap_source.git _clone
+          git -C _clone log -1
+          cp -a _clone/* _clone/.* . 2>/dev/null || true
+          rm -rf _clone .git
+          echo "=== redcap_source contents ==="
+          ls -la
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels)
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=raw,value=${{ env.REDCAP_VERSION }}
+            type=raw,value=latest,enable={{is_default_branch}}
+            type=raw,value=${{ inputs.tag }},enable=${{ inputs.tag != '' }}
+            type=sha,prefix=,format=short
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: redcap_docker/Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            REDCAP_VERSION=${{ env.REDCAP_VERSION }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          platforms: linux/amd64
+
+      - name: Image digest
+        run: echo "Image pushed with digest ${{ steps.meta.outputs.digest }}"

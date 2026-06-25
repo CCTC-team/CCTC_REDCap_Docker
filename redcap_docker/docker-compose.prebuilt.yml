@@ -13,5 +13,5 @@
 # block so `up` uses the pulled image rather than rebuilding (Compose >= 2.24).
 services:
   app:
-    image: ${REDCAP_IMAGE:-ghcr.io/cctc-team/redcap_cypress/redcap-env}:${REDCAP_VERSION}
+    image: ${REDCAP_IMAGE:-ghcr.io/cctc-team/cctc_redcap_docker/redcap-env}:${REDCAP_VERSION}
     build: !reset null
