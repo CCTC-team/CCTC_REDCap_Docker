@@ -1,0 +1,17 @@
+# Inject an external module's code into the prebuilt REDCap image at runtime — no rebuild.
+#
+# Layer on top of docker-compose.yml + docker-compose.prebuilt.yml. The EM source is
+# bind-mounted into the image's modules directory (Dockerfile COPYs redcap_source/ to
+# /var/www/html/, so modules live at /var/www/html/modules/<name>_<version>/). The module
+# is then enabled by the EM's own automated_tests steps, exactly as in the bake-it-in flow.
+#
+#   EM_HOST_PATH=/abs/path/to/checked-out-em \
+#   EM_DIR=embellish_fields_v1.0.3 \
+#   docker compose -f docker-compose.yml -f docker-compose.prebuilt.yml -f docker-compose.em.yml up -d
+#
+# Note: don't combine with docker-compose.ci-shard.yml here — that override does
+# `volumes: !override`, which would drop this mount. EM lanes run a single instance.
+services:
+  app:
+    volumes:
+      - ${EM_HOST_PATH}:/var/www/html/modules/${EM_DIR}:ro

@@ -1,0 +1,17 @@
+# Consume the prebuilt REDCap image from GHCR instead of building it from source.
+#
+# The base docker-compose.yml builds the app image from ../redcap_source (slow, and
+# rebuilt by every repo/run). Layer this override on top to pull a versioned, shared
+# image instead — the same image every external module and the cypress repo consume,
+# so they all test the byte-identical REDCap:
+#
+#   docker compose -f docker-compose.yml -f docker-compose.prebuilt.yml pull app
+#   docker compose -f docker-compose.yml -f docker-compose.prebuilt.yml up -d
+#
+# REDCAP_IMAGE/REDCAP_VERSION come from the .env file (REDCAP_VERSION is already
+# required by the base file). `build: !reset null` drops the base file's build:
+# block so `up` uses the pulled image rather than rebuilding (Compose >= 2.24).
+services:
+  app:
+    image: ${REDCAP_IMAGE:-ghcr.io/cctc-team/redcap_cypress/redcap-env}:${REDCAP_VERSION}
+    build: !reset null

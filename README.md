@@ -143,6 +143,28 @@ docker compose up --build -d
 docker compose logs -f app
 ```
 
+### Run against a prebuilt image (CI / external modules)
+Instead of building REDCap from source, you can consume a versioned image published to
+GHCR (`ghcr.io/CCTC-team/redcap_cypress/redcap-env:<REDCAP_VERSION>`), so every consumer
+tests the byte-identical REDCap. Two compose overrides enable this (layer them on top of
+`docker-compose.yml`):
+
+- **`docker-compose.prebuilt.yml`** — replaces the `app` build with `image:` so `up` pulls
+  the prebuilt image instead of rebuilding from source:
+  ```bash
+  docker compose -f docker-compose.yml -f docker-compose.prebuilt.yml pull app
+  docker compose -f docker-compose.yml -f docker-compose.prebuilt.yml up -d
+  ```
+- **`docker-compose.em.yml`** — additionally bind-mounts an external module's code into the
+  prebuilt image at runtime (no rebuild), at `/var/www/html/modules/<name>_<version>/`:
+  ```bash
+  EM_HOST_PATH=/abs/path/to/em EM_DIR=embellish_fields_v1.0.3 \
+    docker compose -f docker-compose.yml -f docker-compose.prebuilt.yml -f docker-compose.em.yml up -d
+  ```
+
+The prebuilt image is built and pushed by the `build-docker-image.yml` workflow in the
+`redcap_cypress` repo. The standard `up --build` flow above is unchanged for local dev.
+
 ---
 
 ## Data Integrity Checks
