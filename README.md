@@ -145,7 +145,7 @@ docker compose logs -f app
 
 ### Run against a prebuilt image (CI / external modules)
 Instead of building REDCap from source, you can consume a versioned image published to
-GHCR (`ghcr.io/CCTC-team/redcap_cypress/redcap-env:<REDCAP_VERSION>`), so every consumer
+GHCR (`ghcr.io/cctc-team/cctc_redcap_docker/redcap-env:<REDCAP_VERSION>`), so every consumer
 tests the byte-identical REDCap. Two compose overrides enable this (layer them on top of
 `docker-compose.yml`):
 
@@ -162,8 +162,10 @@ tests the byte-identical REDCap. Two compose overrides enable this (layer them o
     docker compose -f docker-compose.yml -f docker-compose.prebuilt.yml -f docker-compose.em.yml up -d
   ```
 
-The prebuilt image is built and pushed by the `build-docker-image.yml` workflow in the
-`redcap_cypress` repo. The standard `up --build` flow above is unchanged for local dev.
+The prebuilt image is built and pushed by the `.github/workflows/build-docker-image.yml`
+workflow in **this** repo — it fires on changes under `redcap_docker/` (Dockerfile, php.ini,
+entrypoint.sh, `.env.example`) and reads the pinned version from `redcap_docker/.env.example`.
+The standard `up --build` flow above is unchanged for local dev.
 
 ---
 
