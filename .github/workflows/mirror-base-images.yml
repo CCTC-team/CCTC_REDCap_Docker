@@ -31,8 +31,10 @@ on:
         default: 'v1.0.0'
 
 env:
-  REGISTRY: ghcr.io
-  NAMESPACE: ${{ github.repository }}   # cctc-team/CCTC_REDCap_Docker -> lowercased by GHCR
+  # Hardcoded lowercase: GHCR repository names must be lowercase, and a raw
+  # `imagetools create` (unlike docker/metadata-action) does NOT lowercase
+  # ${{ github.repository }} (= CCTC-team/CCTC_REDCap_Docker) for us.
+  IMAGE_BASE: ghcr.io/cctc-team/cctc_redcap_docker
 
 jobs:
   mirror:
@@ -47,25 +49,25 @@ jobs:
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v3
         with:
-          registry: ${{ env.REGISTRY }}
+          registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Mirror MariaDB
         run: |
           docker buildx imagetools create \
-            --tag ${{ env.REGISTRY }}/${{ env.NAMESPACE }}/mariadb:${{ inputs.mariadb_tag }} \
+            --tag ${{ env.IMAGE_BASE }}/mariadb:${{ inputs.mariadb_tag }} \
             docker.io/library/mariadb:${{ inputs.mariadb_tag }}
 
       - name: Mirror MailHog
         run: |
           docker buildx imagetools create \
-            --tag ${{ env.REGISTRY }}/${{ env.NAMESPACE }}/mailhog:${{ inputs.mailhog_tag }} \
+            --tag ${{ env.IMAGE_BASE }}/mailhog:${{ inputs.mailhog_tag }} \
             docker.io/mailhog/mailhog:${{ inputs.mailhog_tag }}
 
       - name: Summary
         run: |
           echo "Mirrored:"
-          echo "  ${{ env.REGISTRY }}/${{ env.NAMESPACE }}/mariadb:${{ inputs.mariadb_tag }}"
-          echo "  ${{ env.REGISTRY }}/${{ env.NAMESPACE }}/mailhog:${{ inputs.mailhog_tag }}"
+          echo "  ${{ env.IMAGE_BASE }}/mariadb:${{ inputs.mariadb_tag }}"
+          echo "  ${{ env.IMAGE_BASE }}/mailhog:${{ inputs.mailhog_tag }}"
           echo "If this was the first push, set both packages' visibility to Internal."
