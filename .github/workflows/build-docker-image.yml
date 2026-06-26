@@ -17,6 +17,7 @@ on:
       - 'redcap_docker/php.ini'
       - 'redcap_docker/entrypoint.sh'
       - 'redcap_docker/.env.example'
+      - 'redcap_docker/coverage/**'
       - '.github/workflows/build-docker-image.yml'
   workflow_dispatch:
     inputs:
@@ -105,3 +106,18 @@ jobs:
 
       - name: Image digest
         run: echo "Image pushed with digest ${{ steps.meta.outputs.digest }}"
+
+      # Delete old image versions now that the new one is pushed, to stay under the
+      # org's GHCR storage quota. The just-pushed image is always the newest version
+      # and carries the live `latest`/<version> tags, so keeping the 2 newest never
+      # removes what CI pulls. Stale builds are sha-tagged (not untagged), so prune by
+      # count rather than by the untagged-only filter.
+      - name: Prune old image versions
+        uses: actions/delete-package-versions@v5
+        with:
+          package-name: 'cctc_redcap_docker/redcap-env'
+          package-type: 'container'
+          min-versions-to-keep: 2
+          # Org container-package deletion is unreliable with the default GITHUB_TOKEN,
+          # so use the PAT (which has delete:packages). Falls to GITHUB_TOKEN if unset.
+          token: ${{ secrets.CCTC_TEAM_PAT }}

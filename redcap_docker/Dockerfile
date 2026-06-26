@@ -41,6 +41,12 @@ RUN docker-php-ext-configure zip && \
 RUN pecl install imagick && \
     docker-php-ext-enable imagick
 
+# PHP extension: pcov (lightweight line-coverage driver). Used by the per-request
+# coverage recorder (save-code-coverage.php) so CI can produce a phpcov report.
+# pcov is far cheaper than Xdebug, so leaving it enabled during the Cypress suite
+# adds negligible overhead.
+RUN pecl install pcov && docker-php-ext-enable pcov
+
 # Configure ImageMagick for PDF support.
 # libmagickwand-dev (used to build the imagick PHP ext) does not ship a
 # policy.xml. If one is present (ImageMagick 6 or 7), relax the PDF coder
@@ -85,6 +91,21 @@ RUN chmod +x /usr/local/bin/entrypoint.sh
 
 COPY redcap_docker/database.php /usr/local/share/redcap/database.php.template
 COPY redcap_docker/CreateUsers.sql /usr/local/share/redcap/CreateUsers.sql
+
+# PHP code-coverage tooling (CI only):
+#  - phpcov.phar: merges per-request .cov files into a clover report.
+#  - save-code-coverage.php: auto_prepend recorder that writes a .cov per request.
+# pcov.directory scopes instrumentation to the REDCap tree; auto_prepend_file wires
+# the recorder into every PHP request. /tmp/path/coverage is the drop dir the
+# recorder writes to (world-writable since Apache runs as www-data).
+COPY redcap_docker/coverage/phpcov.phar /var/www/html/phpcov.phar
+COPY redcap_docker/coverage/save-code-coverage.php /usr/local/share/redcap/save-code-coverage.php
+RUN { \
+      echo 'pcov.enabled=1'; \
+      echo 'pcov.directory=/var/www/html'; \
+      echo 'auto_prepend_file=/usr/local/share/redcap/save-code-coverage.php'; \
+    } > /usr/local/etc/php/conf.d/zz-coverage.ini && \
+    mkdir -p /tmp/path/coverage && chmod 777 /tmp/path/coverage
 
 EXPOSE 80 443 8443
 
