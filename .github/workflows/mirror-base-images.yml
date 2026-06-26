@@ -1,0 +1,71 @@
+name: Mirror base images to GHCR
+
+# Mirror the third-party base images the REDCap stack depends on (MariaDB, MailHog)
+# from Docker Hub into GHCR, alongside the prebuilt redcap-env image. CI then pulls
+# ALL three services from one authenticated registry (ghcr.io) instead of pulling
+# mariadb/mailhog anonymously from Docker Hub, which intermittently times out / hits
+# the unauthenticated pull rate limit on shared GitHub runners and fails the
+# "Pull prebuilt image and start Docker services" step.
+#
+# `docker buildx imagetools create` copies the FULL manifest list registry-to-registry
+# (all architectures, same digests) without a pull/re-push, so the mirror is byte-identical
+# to the source. These tags are pinned and rarely change, so this runs on demand.
+#
+# Destinations (consumed by docker-compose.prebuilt.yml):
+#   ghcr.io/cctc-team/cctc_redcap_docker/mariadb:<tag>
+#   ghcr.io/cctc-team/cctc_redcap_docker/mailhog:<tag>
+#
+# After the FIRST run, set both new GHCR packages' visibility to Internal (same as
+# redcap-env) so CCTC_TEAM_PAT can pull them in the cypress-tests workflow.
+
+on:
+  workflow_dispatch:
+    inputs:
+      mariadb_tag:
+        description: 'MariaDB tag to mirror (must match docker-compose.yml)'
+        required: false
+        default: '10.11'
+      mailhog_tag:
+        description: 'MailHog tag to mirror (must match docker-compose.yml)'
+        required: false
+        default: 'v1.0.0'
+
+env:
+  REGISTRY: ghcr.io
+  NAMESPACE: ${{ github.repository }}   # cctc-team/CCTC_REDCap_Docker -> lowercased by GHCR
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+
+    steps:
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Mirror MariaDB
+        run: |
+          docker buildx imagetools create \
+            --tag ${{ env.REGISTRY }}/${{ env.NAMESPACE }}/mariadb:${{ inputs.mariadb_tag }} \
+            docker.io/library/mariadb:${{ inputs.mariadb_tag }}
+
+      - name: Mirror MailHog
+        run: |
+          docker buildx imagetools create \
+            --tag ${{ env.REGISTRY }}/${{ env.NAMESPACE }}/mailhog:${{ inputs.mailhog_tag }} \
+            docker.io/mailhog/mailhog:${{ inputs.mailhog_tag }}
+
+      - name: Summary
+        run: |
+          echo "Mirrored:"
+          echo "  ${{ env.REGISTRY }}/${{ env.NAMESPACE }}/mariadb:${{ inputs.mariadb_tag }}"
+          echo "  ${{ env.REGISTRY }}/${{ env.NAMESPACE }}/mailhog:${{ inputs.mailhog_tag }}"
+          echo "If this was the first push, set both packages' visibility to Internal."

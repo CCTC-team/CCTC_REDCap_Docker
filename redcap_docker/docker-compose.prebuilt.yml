@@ -15,3 +15,11 @@ services:
   app:
     image: ${REDCAP_IMAGE:-ghcr.io/cctc-team/cctc_redcap_docker/redcap-env}:${REDCAP_VERSION}
     build: !reset null
+  # Pull the db/mailhog base images from GHCR (mirrored by mirror-base-images.yml)
+  # instead of anonymously from Docker Hub, whose unauthenticated pull rate limit /
+  # timeouts intermittently fail the CI pull step. Tags MUST match docker-compose.yml.
+  # The base file keeps the Docker Hub refs so plain local `up` needs no GHCR login.
+  db:
+    image: ghcr.io/cctc-team/cctc_redcap_docker/mariadb:10.11
+  mailhog:
+    image: ghcr.io/cctc-team/cctc_redcap_docker/mailhog:v1.0.0
