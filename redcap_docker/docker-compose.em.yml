@@ -11,7 +11,13 @@
 #
 # Note: don't combine with docker-compose.ci-shard.yml here — that override does
 # `volumes: !override`, which would drop this mount. EM lanes run a single instance.
+#
+# Mounted read-WRITE (not :ro): entrypoint.sh runs `chown -R www-data:www-data
+# /var/www/html/modules` under `set -e`, which recurses into this mount. A read-only
+# mount makes that chown fail with EROFS, so the entrypoint aborts before starting
+# Apache and REDCap never comes up. rw lets the boot chown succeed; it only touches the
+# ephemeral CI checkout of the EM, never the committed source.
 services:
   app:
     volumes:
-      - ${EM_HOST_PATH}:/var/www/html/modules/${EM_DIR}:ro
+      - ${EM_HOST_PATH}:/var/www/html/modules/${EM_DIR}:rw
