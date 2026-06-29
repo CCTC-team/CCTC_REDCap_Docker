@@ -103,6 +103,12 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           platforms: linux/amd64
+          # Disable provenance attestation. With it on (build-push-action's default),
+          # one push stores 3 GHCR objects — a tagged index + the image manifest + the
+          # attestation — and the "Prune old image versions" step (keep 2 newest) then
+          # deletes the image manifest a tag still points to, yielding "manifest
+          # unknown" on pull. Off => one manifest per build, so prune-by-count is safe.
+          provenance: false
 
       - name: Image digest
         run: echo "Image pushed with digest ${{ steps.meta.outputs.digest }}"
