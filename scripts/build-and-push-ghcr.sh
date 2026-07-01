@@ -3,8 +3,12 @@
 # Build BOTH stack images as multi-arch (linux/amd64 + linux/arm64) manifests and
 # push them to the private GitHub Container Registry (GHCR) under CCTC-team.
 #
-#   Image A (REDCap all-in-one):  ghcr.io/cctc-team/redcap-aio:<REDCAP_VERSION>
-#   Image B (Cypress runner):     ghcr.io/cctc-team/redcap-cypress:<CYPRESS_TAG>
+#   Image A (REDCap all-in-one):  ghcr.io/cctc-team/cctc_redcap_docker/redcap-aio:<REDCAP_VERSION>
+#   Image B (Cypress runner):     ghcr.io/cctc-team/redcap_cypress/cypress-runner-aio:<CYPRESS_TAG>
+#
+# These are the SAME canonical paths the CI build workflows publish
+# (build-redcap-aio.yml / build-cypress-runner-aio.yml); this script is the manual
+# multi-arch equivalent (CI publishes amd64 only).
 #
 # Multi-arch manifests can only live in a registry (you can't `--load` two
 # platforms into the local Docker), so each image is built and `--push`ed in one
@@ -31,14 +35,14 @@
 set -euo pipefail
 
 # --- config (override via env) ------------------------------------------------
-ORG="${ORG:-ghcr.io/cctc-team}"
 REDCAP_VERSION="${REDCAP_VERSION:-15.5.36}"
 CYPRESS_TAG="${CYPRESS_TAG:-15.10.0}"
 PLATFORMS="${PLATFORMS:-linux/amd64,linux/arm64}"
 BUILDER="${BUILDER:-cctc-multiarch}"
 
-AIO_IMAGE="${ORG}/redcap-aio:${REDCAP_VERSION}"
-RUNNER_IMAGE="${ORG}/redcap-cypress:${CYPRESS_TAG}"
+# Canonical GHCR paths (match the CI build workflows). Override via env if needed.
+AIO_IMAGE="${AIO_IMAGE:-ghcr.io/cctc-team/cctc_redcap_docker/redcap-aio:${REDCAP_VERSION}}"
+RUNNER_IMAGE="${RUNNER_IMAGE:-ghcr.io/cctc-team/redcap_cypress/cypress-runner-aio:${CYPRESS_TAG}}"
 
 # Repo root = parent of this script's dir.
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"

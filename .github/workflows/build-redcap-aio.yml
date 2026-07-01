@@ -1,0 +1,122 @@
+name: Build and Push REDCap All-in-One Image
+
+# Publishes the all-in-one REDCap image (REDCap + MariaDB + MailHog in ONE
+# container, built from redcap_docker_aio/). This is the REDCap half of the new
+# two-image test stack that cypress-tests.yml (in redcap_cypress) runs against.
+# Lives HERE next to the Dockerfile it builds; rebuilt only when the AIO build
+# actually changes, never on a consumer's test run.
+#
+# Version source of truth: redcap_docker_aio/.env.example (tracked; .env is gitignored).
+# Image: ghcr.io/cctc-team/cctc_redcap_docker/redcap-aio:<version> (+ latest, + short sha).
+#
+# amd64 only: the CI test job runs on ubuntu (amd64), so that's all CI needs.
+# arm64 (local Apple Silicon) is published via scripts/build-and-push-ghcr.sh
+# (multi-arch). Add linux/arm64 to `platforms` below to publish it here too — but
+# note the arm64 half builds under slow QEMU emulation in CI.
+
+on:
+  push:
+    branches:
+      - redcap_val
+    paths:
+      - 'redcap_docker_aio/**'
+      - '.github/workflows/build-redcap-aio.yml'
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Extra Docker image tag (optional)'
+        required: false
+        default: ''
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}/redcap-aio
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Read REDCap version from redcap_docker_aio/.env.example
+        run: |
+          REDCAP_VERSION=$(grep -E '^REDCAP_VERSION=' redcap_docker_aio/.env.example | cut -d= -f2 | tr -d '[:space:]')
+          test -n "${REDCAP_VERSION}" || (echo "ERROR: REDCAP_VERSION not found in redcap_docker_aio/.env.example" && exit 1)
+          echo "REDCAP_VERSION=${REDCAP_VERSION}" >> $GITHUB_ENV
+          echo "REDCAP_VERSION=${REDCAP_VERSION}"
+
+      - name: Get REDCap Source
+        env:
+          GH_PAT: ${{ secrets.CCTC_TEAM_PAT }}
+        run: |
+          # redcap_source/ is not tracked here (proprietary). Clone it at the pinned
+          # version into ./redcap_source so the Dockerfile (COPY redcap_source/ ...)
+          # can pick it up.
+          if [[ "${{ env.REDCAP_VERSION }}" = "99.99.99" ]]; then
+            export BRANCH=main
+          else
+            export BRANCH=${{ env.REDCAP_VERSION }}
+          fi
+
+          cd redcap_source
+          git clone --depth=1 --branch=$BRANCH \
+            https://x-access-token:${GH_PAT}@github.com/CCTC-team/redcap_source.git _clone
+          git -C _clone log -1
+          cp -a _clone/* _clone/.* . 2>/dev/null || true
+          rm -rf _clone .git
+          echo "=== redcap_source contents ==="
+          ls -la
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels)
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=raw,value=${{ env.REDCAP_VERSION }}
+            type=raw,value=latest,enable={{is_default_branch}}
+            type=raw,value=${{ inputs.tag }},enable=${{ inputs.tag != '' }}
+            type=sha,prefix=,format=short
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: redcap_docker_aio/Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            REDCAP_VERSION=${{ env.REDCAP_VERSION }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          platforms: linux/amd64
+          # Provenance off: keeps one manifest per build so the prune-by-count step
+          # below can't delete a manifest a live tag still points to (see redcap-env).
+          provenance: false
+
+      - name: Image digest
+        run: echo "Image pushed with digest ${{ steps.meta.outputs.digest }}"
+
+      - name: Prune old image versions
+        uses: actions/delete-package-versions@v5
+        with:
+          package-name: 'cctc_redcap_docker/redcap-aio'
+          package-type: 'container'
+          min-versions-to-keep: 2
+          token: ${{ secrets.CCTC_TEAM_PAT }}

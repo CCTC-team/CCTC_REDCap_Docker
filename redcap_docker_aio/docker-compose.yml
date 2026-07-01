@@ -15,7 +15,7 @@ services:
   redcap:
     container_name: CCTC_REDCap_Docker
     # Local build names the image cctc/redcap-<ver>:<tag>. To run a PREBUILT image
-    # from GHCR instead, set REDCAP_IMAGE=ghcr.io/cctc-team/redcap-aio:15.5.36 in
+    # from GHCR instead, set REDCAP_IMAGE=ghcr.io/cctc-team/cctc_redcap_docker/redcap-aio:15.5.36 in
     # .env, then `docker compose pull && docker compose up -d` (pulls, no rebuild).
     image: ${REDCAP_IMAGE:-cctc/redcap-${REDCAP_VERSION}:${REDCAP_IMAGE_TAG:-v1.0.0}}
     pull_policy: missing
