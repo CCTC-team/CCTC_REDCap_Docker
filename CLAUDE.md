@@ -8,6 +8,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 See [README.md](README.md) for setup instructions, common commands, default users, and access URLs.
 
+## Stacks in this repo
+
+- **`redcap_docker/`** — the default 3-container stack (app + db + mailhog); the CI path. Documented in the sections below.
+- **`redcap_docker_aio/`** — an all-in-one image: REDCap + MariaDB + MailHog in ONE container via supervisord. Built as `cctc/redcap-<version>:<tag>`, container `CCTC_REDCap_Docker`, DB volume `cctc_mariadb_data`. See [redcap_docker_aio/README.md](redcap_docker_aio/README.md).
+- **`redcap_cypress/cypress_runner/`** — a runner image with `redcap_rsvc` + `rctf` baked in; runs the feature suite headless against the `redcap_docker_aio/` container (`docker exec` for DB/files, host network for HTTP, private deps cloned via BuildKit SSH). Lives inside the `redcap_cypress/` suite so its Docker build context is that suite. See [redcap_cypress/cypress_runner/README.md](redcap_cypress/cypress_runner/README.md).
+
 ## Project Structure
 
 ```
