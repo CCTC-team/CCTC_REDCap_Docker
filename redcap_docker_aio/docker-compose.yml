@@ -1,0 +1,44 @@
+# All-in-one REDCap stack: ONE container running REDCap + MariaDB + Mailhog.
+#
+#   cp .env.example .env
+#   docker compose up -d --build
+#
+# REDCap:  https://localhost:8443   (login test_admin / Testing123)
+# Mailhog: http://localhost:8025
+#
+# This is a single self-contained image. The equivalent bare docker run:
+#   docker run -d --name CCTC_REDCap_Docker \
+#     -p 8080:80 -p 8443:8443 -p 8025:8025 -p 1025:1025 -p 3400:3306 \
+#     -v cctc_mariadb_data:/var/lib/mysql \
+#     cctc/redcap-15.5.36:v1.0.0
+services:
+  redcap:
+    container_name: CCTC_REDCap_Docker
+    # Local build names the image cctc/redcap-<ver>:<tag>. To run a PREBUILT image
+    # from GHCR instead, set REDCAP_IMAGE=ghcr.io/cctc-team/redcap-aio:15.5.36 in
+    # .env, then `docker compose pull && docker compose up -d` (pulls, no rebuild).
+    image: ${REDCAP_IMAGE:-cctc/redcap-${REDCAP_VERSION}:${REDCAP_IMAGE_TAG:-v1.0.0}}
+    pull_policy: missing
+    build:
+      context: ..
+      dockerfile: redcap_docker_aio/Dockerfile
+      args:
+        REDCAP_VERSION: ${REDCAP_VERSION}
+    ports:
+      - '${REDCAP_HTTP_PORT:-8080}:80'
+      - '${REDCAP_HTTPS_PORT:-8443}:8443'
+      - '${MAILHOG_UI_PORT:-8025}:8025'
+      - '${MAILHOG_SMTP_PORT:-1025}:1025'
+      - '${MYSQL_PORT:-3400}:3306'
+    environment:
+      - REDCAP_VERSION=${REDCAP_VERSION}
+      - MYSQL_DATABASE=${MYSQL_DATABASE:-redcap}
+      - MYSQL_PASSWORD=${MYSQL_ROOT_PASSWORD:-root}
+      - REDCAP_SALT=${REDCAP_SALT:-12345678}
+      - REDCAP_HTTPS_PORT=${REDCAP_HTTPS_PORT:-8443}
+    volumes:
+      - cctc_mariadb_data:/var/lib/mysql
+
+volumes:
+  cctc_mariadb_data:
+    name: cctc_mariadb_data

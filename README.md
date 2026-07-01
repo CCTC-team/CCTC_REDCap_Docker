@@ -4,6 +4,21 @@ A self-contained Docker setup that runs REDCap with MariaDB and MailHog. Place y
 
 ---
 
+## Which stack?
+
+This repo contains a few ways to stand up REDCap. Pick the one that fits:
+
+| Stack | Folder | Shape | Use for |
+|-------|--------|-------|---------|
+| **Default / CI** | [`redcap_docker/`](redcap_docker/) | 3 containers (app + db + mailhog) | the standard local + CI flow; documented below |
+| **All-in-one** | [`redcap_docker_aio/`](redcap_docker_aio/README.md) | **1 container** (REDCap + MariaDB + MailHog via supervisord) | a single shippable image; one `docker run` stands it all up |
+| **Cypress runner** | [`redcap_cypress/cypress_runner/`](redcap_cypress/cypress_runner/README.md) | test runner image | runs the `redcap_rsvc` feature suite (headless) against the all-in-one container |
+
+The rest of this README documents the default `redcap_docker/` stack. For the
+single-image flow and its test runner, see the linked folder READMEs.
+
+---
+
 ## Who are we
 
 The Cambridge Cancer Trials Centre (CCTC) is a collaboration between Cambridge University Hospitals NHS Foundation Trust, the University of Cambridge, and Cancer Research UK. Founded in 2007, CCTC designs and conducts clinical trials and studies to improve outcomes for patients with cancer or those at risk of developing it. In 2011, CCTC began hosting the Cambridge Clinical Trials Unit - Cancer Theme (CCTU-CT).
