@@ -301,9 +301,20 @@ the original `minimal/` 3-container spec.)
 
 ---
 
-## ⏸️ RESUME HERE (updated 2026-07-01 — only the COMMIT remains)
+## ✅ COMPLETE (closed 2026-07-03)
 
-Build + full-suite validation are **done**. AIO container is left running (`docker ps`
+All phases done and both repos committed via merged PRs. **`CCTC_REDCap_Docker`**:
+`redcap_docker_aio/` landed (PR #1, `feat/redcap-docker-aio-stack`), `minimal/` deleted,
+README/CLAUDE updated, AIO-only CI workflow kept (`3fdc436`). **`redcap_cypress`**:
+`cypress_runner/` committed (PR #104, `feat/cypress-runner-image`) and the whole CI
+pipeline cut over to the AIO two-image stack (shared prebuilt GHCR images, 8-shard split).
+
+Post-completion follow-ups (tracked in memory, not part of this plan's scope): the
+rctf loading-overlay regression (`cctc_v1.0.5` → fixed in `cctc_v1.0.6`, jQuery `:visible`
+vs `visibility:hidden`) and the combined-report shard-collision fix — both shipped
+2026-07-03.
+
+Build + full-suite validation were **done**. AIO container is left running (`docker ps`
 → `CCTC_REDCap_Docker`); restart with `cd redcap_docker_aio && docker compose up -d` if stopped.
 
 1. **[x] Confirmed the 4 flakes** (isolated fresh-container reruns, `flaky-tests.md`
@@ -318,17 +329,15 @@ Build + full-suite validation are **done**. AIO container is left running (`dock
    **Re-verified:** image rebuilds from the new context (SSH `npm ci` + move_files)
    and smoke spec `A.1.1.0100` passes (1/1).
 3. **[x] DELETED** `minimal/` (nothing external referenced it).
-4. **[ ] COMMIT** — spans **two repos** (⏸️ PAUSED for user review before committing):
+4. **[x] COMMITTED** — spanned **two repos**, both landed via merged PRs:
    - `CCTC_REDCap_Docker`: new `redcap_docker_aio/`; `README.md` + `CLAUDE.md` edits; `minimal/`
-     removed. NB `cypress_runner/` now lives **inside** the nested `redcap_cypress`
-     repo, so it is NOT part of this repo's commit.
+     removed (PR #1). `cypress_runner/` lives **inside** the nested `redcap_cypress`
+     repo, so it was NOT part of this repo's commit.
    - `redcap_cypress` (separate nested repo): new `cypress_runner/` folder +
-     `.gitignore` edit. **The container-name override is a build-time `sed` in
-     `cypress_runner/Dockerfile`, NOT a `cypress.config.js` source edit** —
-     `cypress.config.js` is git-ignored in `redcap_cypress` anyway, so there is no
-     source patch to commit there (the original plan note is superseded).
-   - Both repos also carry unrelated untracked files (AIPlans/, PLAN.md, various
-     `.md`) — commit **only** the stack files, not `git add -A`.
+     `.gitignore` edit (PR #104). Container-name override is a build-time `sed` in
+     `cypress_runner/Dockerfile`, not a `cypress.config.js` source edit.
+   - Unrelated untracked docs (AIPlans/, PLAN.md, various `.md`) were left
+     uncommitted, as intended.
 
 ## Cleanup (do at the end)
 
