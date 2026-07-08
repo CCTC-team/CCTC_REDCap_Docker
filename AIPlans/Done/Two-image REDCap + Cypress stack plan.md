@@ -1,5 +1,14 @@
 # Two-Image REDCap + Cypress Stack Implementation Plan
 
+> **SCOPE NOTE.** This plan covers the **local** two-stack workflow: the AIO
+> REDCap image (`redcap_docker_aio/`) plus a locally-built runner image
+> (`cctc/redcap-cypress:15.10.0`) run on demand via `docker compose`. The
+> subsequent **CI cutover** — shared prebuilt GHCR images, the per-commit-SHA
+> `cypress-runner-aio` build, and the 8-shard split — was a separate follow-up,
+> not this plan. For those CI specifics see `redcap_cypress`'s
+> [.github/workflows/cypress-tests-aio.yml](../../redcap_cypress/.github/workflows/cypress-tests-aio.yml)
+> and its README "GitHub Actions / CI Workflow" section.
+
 > **ARCHITECTURE PIVOT (Image A).** After Phase 1 was built and verified as a
 > 3-container stack (`minimal/`), the user chose a **single all-in-one image**
 > instead: REDCap + MariaDB + Mailhog in ONE image, supervised by supervisord,
