@@ -10,11 +10,11 @@ This repository provides a self-contained, Dockerised REDCap instance paired wit
 
 | Component | Location | Purpose |
 |---|---|---|
-| **[CCTC_REDCap_Docker](https://github.com/CCTC-team/CCTC_REDCap_Docker)** | `CCTC_REDCap_Docker/` | Docker environment running REDCap, MariaDB, and MailHog |
+| **[CCTC_REDCap_Docker](https://github.com/CCTC-team/CCTC_REDCap_Docker)** | `CCTC_REDCap_Docker/` | Docker environment running REDCap, MariaDB, and MailHog as a single all-in-one container — see [How REDCap Runs](#how-redcap-runs) |
 | **[redcap_cypress](https://github.com/CCTC-team/redcap_cypress)** | `redcap_cypress/` | Cypress + Gherkin BDD test framework |
 | **[redcap_rsvc](https://github.com/CCTC-team/redcap_rsvc)** | `redcap_rsvc/` | 755+ RSVC validation feature tests (Tiers A–D) |
 | **[rctf](https://github.com/CCTC-team/rctf)** | `node_modules/rctf/` | Step definitions for the Gherkin feature tests in redcap_rsvc |
-| **[REDCap_Data_Integrity_Checks](https://github.com/CCTC-team/REDCap_Data_Integrity_Checks)** | External repo | SQL scripts for data integrity checks; results output to `redcap_docker/Audit_Analysis_Reports/` |
+| **[REDCap_Data_Integrity_Checks](https://github.com/CCTC-team/REDCap_Data_Integrity_Checks)** | External repo | SQL scripts for data integrity checks; results output to `redcap_docker_aio/Audit_Analysis_Reports/` |
 
 ### How They Fit Together
 
@@ -24,13 +24,26 @@ CCTC_REDCap_Docker (Docker containers)
         ▲                        │
         │  tests run against     │  results written to
         │                        ▼
-redcap_cypress               redcap_docker/Audit_Analysis_Reports/
+redcap_cypress               redcap_docker_aio/Audit_Analysis_Reports/
   └── Uses redcap_rsvc         └── Output from REDCap_Data_Integrity_Checks scripts
       feature files +
       rctf step definitions
 ```
 
 Cypress connects to the Dockerised REDCap instance, resets the database to a clean state before each test, and executes Gherkin `.feature` files that validate REDCap functionality.
+
+---
+
+## How REDCap Runs
+
+`CCTC_REDCap_Docker` stands up REDCap as a single **all-in-one (AIO)** image — REDCap + MariaDB + MailHog in one container via `supervisord`. It's used two ways:
+
+| Stack | Folder | Shape | Use for |
+|---|---|---|---|
+| **All-in-one (AIO)** | [`redcap_docker_aio/`](redcap_docker_aio/) | **1 container** (REDCap + MariaDB + MailHog via `supervisord`) | the standard local flow (documented in [Part 1](#part-1-set-up-the-redcap-docker-environment) below); also published to GHCR and used by the two-image test stack |
+| **Cypress runner** | [`redcap_cypress/cypress_runner/`](redcap_cypress/cypress_runner/README.md) | test-runner image | runs the `redcap_rsvc` feature suite (headless) against the AIO container; the CI path |
+
+> **AIO in brief:** `cd redcap_docker_aio && cp .env.example .env && docker compose up -d --build` — REDCap at https://localhost:8443, MailHog at http://localhost:8025. See the top-level [`README.md`](README.md) for details.
 
 ---
 
@@ -46,6 +59,8 @@ Cypress connects to the Dockerised REDCap instance, resets the database to a cle
 ## Part 1: Set Up the REDCap Docker Environment
 
 > Full details: [`CCTC_REDCap_Docker/README.md`](README.md)
+>
+> This walks through the **all-in-one** stack ([`redcap_docker_aio/`](redcap_docker_aio/)) — REDCap, MariaDB, and MailHog in a single container.
 
 ### Steps
 
@@ -56,11 +71,11 @@ Cypress connects to the Dockerised REDCap instance, resets the database to a cle
    CCTC_REDCap_Docker/redcap_source/redcap_v15.5.36/
    ```
 
-3. **Configure the `.env` file** in `CCTC_REDCap_Docker/redcap_docker/`. Copy from `.env.example` if needed, then set `REDCAP_VERSION` to match your source folder (e.g., `15.5.36`).
+3. **Configure the `.env` file** in `CCTC_REDCap_Docker/redcap_docker_aio/`. Copy from `.env.example` if needed, then set `REDCAP_VERSION` to match your source folder (e.g., `15.5.36`).
 
-4. **Build and start the containers**:
+4. **Build and start the container**:
    ```bash
-   cd CCTC_REDCap_Docker/redcap_docker
+   cd CCTC_REDCap_Docker/redcap_docker_aio
    docker compose up --build -d
    ```
 
@@ -103,7 +118,7 @@ docker compose up -d
 docker compose down -v && docker compose up --build -d
 
 # View logs
-docker compose logs -f app
+docker compose logs -f
 ```
 
 For more Docker operations and troubleshooting, see [`CCTC_REDCap_Docker/README.md`](README.md).
@@ -165,21 +180,26 @@ cp -a redcap_rsvc/Files/* cypress/fixtures/
 
 ## Part 3: Run the Tests
 
+> Full detail — both run paths (host + containerized runner image) and the `ELECTRON_RUN_AS_NODE` gotcha: [`redcap_cypress/README.md` → Running Tests](https://github.com/CCTC-team/redcap_cypress/blob/redcap_val/README.md#running-tests)
+
+With the AIO REDCap container running, run the suite on the host with the **`:local`** npm scripts (shown here), or via the containerized `cypress-runner` image that mirrors CI (see the link above).
+
 ### Interactive Mode (Cypress UI)
 
 ```bash
-npx cypress open
+npm run open:local
 ```
 
-This opens the Cypress Test Runner where you can browse and run individual feature files.
+Opens the Cypress Test Runner to browse and run individual feature files. Use the `:local` script — **not** a bare `npx cypress open` — because it unsets `ELECTRON_RUN_AS_NODE` (VSCode / Claude Code export it, which otherwise makes Cypress's GUI fail with `bad option: --no-sandbox`) and points the docker-exec tasks at the AIO container.
 
 ### Headless Mode (CLI)
 
 ```bash
-npx cypress run
+npm run test:local                        # whole suite
+npm run test:local -- --spec "redcap_rsvc/Feature Tests/.../X.feature"
 ```
 
-Runs all tests in the terminal without opening a browser window.
+Runs in the terminal without opening a browser window.
 
 ### Test Reports (Mochawesome)
 
@@ -195,7 +215,7 @@ This creates `cypress/results/html/test-report.html` — open it in a browser to
 To customise the report filename per run, set the `REPORT_NAME` environment variable:
 
 ```bash
-REPORT_NAME=v15.5.36-smoke npx cypress run --browser chrome --spec "..."
+REPORT_NAME=v15.5.36-smoke npm run test:local -- --browser chrome --spec "..."
 ```
 
 To clear old results before a fresh run:
@@ -247,7 +267,7 @@ Core step definitions live in the **[rctf](https://github.com/CCTC-team/rctf/tre
 - [ ] `npm run redcap_rsvc:install` completed
 - [ ] `cypress.config.js` configured (`baseUrl` and `mailHogUrl` match your setup)
 - [ ] `cypress.env.json` configured
-- [ ] `npx cypress open` launches successfully
+- [ ] `npm run open:local` launches Cypress successfully
 
 ---
 
@@ -262,7 +282,7 @@ The following steps may be a useful checklist when configuring your institution'
 1. **Checkout REDCap and related source code** intended for deployment (includes REDCap source + could include hooks, plugins, EMs, etc.)
 2. Checkout **redcap_cypress** repository
 3. Generate **cypress.config.js** from **cypress.config.js.example** and update **baseUrl** and **mailHogUrl** to point to your REDCap and MailHog instances. Generate **cypress.env.json** from **cypress.env.json.example** and set **redcap_version** and **MySQL** environment variables as needed for your environment.
-4. Set desired **redcap_rsvc** version in **package.json** (e.g. `"redcap_rsvc": "git://github.com/CCTC-team/redcap_rsvc.git#v15.5.36"`)
+4. Set desired **redcap_rsvc** version in **package.json** (e.g. `"redcap_rsvc": "github:CCTC-team/redcap_rsvc#cctc_v1.0.5"`)
 5. Install Cypress and RCTF dependencies: `npm install`
 6. Install REDCap RSVC feature tests (as defined in **package.json**): `npm run redcap_rsvc:install`
 7. Start test instance of REDCap (if not already running). Command is specific to test instance implementation.
