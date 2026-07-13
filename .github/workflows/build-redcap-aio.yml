@@ -19,7 +19,12 @@ on:
     branches:
       - redcap_val
     paths:
+      # Only rebuild when something that actually affects the image changes.
+      # Docs (*.md) and docker-compose.yml are local-dev-only and don't reach the
+      # Dockerfile build, so exclude them to avoid pointless no-op rebuilds.
       - 'redcap_docker_aio/**'
+      - '!redcap_docker_aio/**/*.md'
+      - '!redcap_docker_aio/docker-compose.yml'
       - '.github/workflows/build-redcap-aio.yml'
   workflow_dispatch:
     inputs:
