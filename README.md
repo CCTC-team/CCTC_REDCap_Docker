@@ -146,18 +146,31 @@ A single container (`CCTC_REDCap_Docker`) runs all three services under `supervi
 
 | Component | Notes |
 |-----------|-------|
-| REDCap (PHP 8.2 / Apache) | source **baked into the image** at build time |
+| REDCap (PHP 8.2 / Apache) | source **baked into the image** at build time; in local dev, `redcap_source/modules/` is bind-mounted for live external-module edits (Compose only — not CI) |
 | MariaDB | data in the **`cctc_mariadb_data`** volume (`/var/lib/mysql`), plus an `Audit_Analysis_Reports` bind mount for data integrity check results |
 | MailHog | built from source (native arm64); catches all REDCap email |
 | supervisord | the in-container init that runs all three |
 
 [`redcap_docker_aio/entrypoint.sh`](redcap_docker_aio/entrypoint.sh) bootstraps the DB on first boot (schema, data, test users), then hands off to `supervisord`.
 
+### Files in [`redcap_docker_aio/`](redcap_docker_aio/)
+
+| File | Purpose |
+|------|---------|
+| `Dockerfile` | builds the single image (REDCap baked in) |
+| `docker-compose.yml` | stands up the container (service `redcap`, container `CCTC_REDCap_Docker`) |
+| `entrypoint.sh` | bootstraps the DB on first boot, then hands off to `supervisord` |
+| `supervisord.conf` | in-container init running REDCap + MariaDB + MailHog |
+| `conf/redcap.ini` | PHP overrides (mail routed to local MailHog) |
+| `CreateUsers.sql` | seeds the test users |
+| `.env.example` | template config (`REDCAP_VERSION` is the version source of truth) |
+
 ---
 
 ## Things to know
 
 - **REDCap source is writable but ephemeral.** It lives in the container's writable layer, so external modules can inject code and core files can be edited at runtime — but those edits **reset to pristine on container recreation** (`docker compose down` / `--force-recreate`). They survive `stop`/`start`. This is intentional for reproducible test runs.
+- **External modules are live-mounted in local dev.** `redcap_source/modules/` is bind-mounted into the container ([redcap_docker_aio/docker-compose.yml](redcap_docker_aio/docker-compose.yml)), so EM code edits appear without a rebuild. This is a **local-dev convenience only** — CI runs the prebuilt image via `docker run` and does not use Compose, so it does not apply there.
 - **The database persists** in `cctc_mariadb_data` across recreate. Rebuilding (`--build`) does **not** reset it. To wipe it for a clean slate: `docker compose down -v`.
 - **Recreate is safe.** `docker compose up -d` on an existing volume re-uses the DB; the entrypoint authenticates root with or without a password (fresh vs. persisted datadir) so it won't crash on restart.
 - **MariaDB durability is relaxed** (`innodb_flush_log_at_trx_commit=0`, `sync_binlog=0`, `innodb_doublewrite=OFF`) so the per-test DB reseed is fast. Safe here because the test DB is disposable — only crash-durability is traded.
@@ -173,6 +186,19 @@ All commands below must be run from within the `redcap_docker_aio` folder in you
 ```bash
 cd redcap_docker_aio
 ```
+
+### `build` vs. `up` vs. `pull` — and when you need `redcap_source/`
+
+`docker-compose.yml` has **both** an `image:` (the name/tag) and a `build:` section (how to build it). `image:` names the artifact; `build:` says how to produce it locally. What each command does:
+
+| Command | Does | Needs `redcap_source/`? |
+|---|---|---|
+| `docker compose build` | Builds a **new local image** from the Dockerfile and tags it `cctc/redcap-<version>:<tag>`. Starts nothing. | **Yes** |
+| `docker compose up` | Starts the container. Reuses the tagged image if it already exists locally (**no rebuild**); builds it only if absent. | Only if it must build |
+| `docker compose up --build` | **Always rebuilds**, then starts. | **Yes** |
+| `docker compose pull` | Fetches a **prebuilt** image from GHCR (see [Run against a prebuilt image](#run-against-a-prebuilt-image-ci--external-modules)). | **No** |
+
+`redcap_source/` is the **build input** — the Dockerfile bakes it in with `COPY redcap_source/ /var/www/html/`. You need it **whenever a build runs**; you do **not** need it to pull or run an already-built image, because the source is inside that image's layers. `pull_policy: missing` keeps a plain `up` fast by reusing the existing tagged image instead of rebuilding every time.
 
 ### Stop services
 ```bash

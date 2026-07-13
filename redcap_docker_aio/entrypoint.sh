@@ -144,7 +144,10 @@ fi
 # STEP 6: Writable runtime dirs + edoc subfolders
 # ============================================================
 mkdir -p /var/www/html/redcap_file_repository /var/www/html/temp /var/www/html/modules
-chown -R www-data:www-data /var/www/html/redcap_file_repository /var/www/html/temp /var/www/html/modules
+# modules/ may be a host bind-mount (live EM dev): chown can fail on host-owned
+# .git objects, so keep it non-fatal — PHP only needs read access there.
+chown -R www-data:www-data /var/www/html/redcap_file_repository /var/www/html/temp
+chown -R www-data:www-data /var/www/html/modules 2>/dev/null || true
 find /var/www/html/redcap_file_repository -type d -exec chmod 2775 {} \; 2>/dev/null || true
 
 "${MYSQL_BOOT[@]}" -N -e "

@@ -40,7 +40,8 @@ services:
       - cctc_mariadb_data:/var/lib/mysql
       # Data Integrity Checks output (REDCap_Data_Integrity_Checks) written by the DB
       - ./Audit_Analysis_Reports:/var/lib/mysql/Audit_Analysis_Reports
-
+      # Live-mount external modules so EM edits show up without a rebuild
+      #- ../redcap_source/modules/:/var/www/html/modules/
 volumes:
   cctc_mariadb_data:
     name: cctc_mariadb_data
