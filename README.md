@@ -272,6 +272,8 @@ The [.github/workflows/build-redcap-aio.yml](.github/workflows/build-redcap-aio.
 - `CCTC_TEAM_PAT` — clones `redcap_source` and prunes old GHCR image versions.
 - `GITHUB_TOKEN` — GHCR login for the push (built-in).
 
+> **Native arm64 images (manual).** CI publishes **`linux/amd64`** only — which runs on Apple Silicon under emulation. To publish multi-arch (`amd64` + native `arm64`) manifests of both the AIO and `cypress-runner-aio` images, run [`scripts/build-and-push-ghcr.sh`](scripts/build-and-push-ghcr.sh) locally (needs a GHCR PAT, ssh-agent for the private deps, and QEMU). It pushes to the same GHCR paths CI uses.
+
 > **`docker-compose.yml` vs `Dockerfile` — what CI actually uses.** `docker-compose.yml` is for **local dev only**. The **Dockerfile** is what CI cares about: it produces the image. The Cypress suite then consumes that prebuilt image via `docker run`, bypassing both the Dockerfile build and Compose. So a change to `docker-compose.yml` affects only local dev; changes that must reach CI belong in the **Dockerfile** (or the image tag the workflows pull).
 
 ---
