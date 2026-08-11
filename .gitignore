@@ -2,6 +2,11 @@ redcap_cypress/*
 redcap_docker/*
 redcap_source/*
 rctf/*
+# Working tree for the CCTC REDCap validation work — its own nested clones
+# (CCTC_REDCap_Docker, rctf, gh-val, external-module-framework, EM modules) live
+# here and must never be tracked by this repo. Without this rule a `git add` run
+# from the wrong directory silently commits into this repo instead.
+redcap_v15/*
 .idea
 .DS_Store
 Installation Instructions.txt
