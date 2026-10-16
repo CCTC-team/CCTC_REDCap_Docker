@@ -60,6 +60,9 @@ RUN policy=$(find /etc/ImageMagick-* -name policy.xml 2>/dev/null | head -n1); \
 RUN cp "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 COPY redcap_docker_aio/conf/redcap.ini /usr/local/etc/php/conf.d/zz-redcap.ini
 
+# MariaDB config: REDCap-recommended overrides (max_allowed_packet=1G).
+COPY redcap_docker_aio/conf/redcap-mariadb.cnf /etc/mysql/mariadb.conf.d/99-redcap.cnf
+
 # Self-signed cert.
 RUN openssl req -x509 -nodes -days 3650 -newkey rsa:2048 \
     -keyout /etc/ssl/private/mycert.key \

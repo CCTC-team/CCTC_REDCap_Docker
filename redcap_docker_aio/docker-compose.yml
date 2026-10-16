@@ -10,12 +10,12 @@
 #   docker run -d --name CCTC_REDCap_Docker \
 #     -p 8080:80 -p 8443:8443 -p 8025:8025 -p 1025:1025 -p 3400:3306 \
 #     -v cctc_mariadb_data:/var/lib/mysql \
-#     cctc/redcap-15.5.36:v1.0.0
+#     cctc/redcap-17.5.6:v1.0.0
 services:
   redcap:
     container_name: CCTC_REDCap_Docker
     # Local build names the image cctc/redcap-<ver>:<tag>. To run a PREBUILT image
-    # from GHCR instead, set REDCAP_IMAGE=ghcr.io/cctc-team/cctc_redcap_docker/redcap-aio:15.5.36 in
+    # from GHCR instead, set REDCAP_IMAGE=ghcr.io/cctc-team/cctc_redcap_docker/redcap-aio:17.5.6 in
     # .env, then `docker compose pull && docker compose up -d` (pulls, no rebuild).
     image: ${REDCAP_IMAGE:-cctc/redcap-${REDCAP_VERSION}:${REDCAP_IMAGE_TAG:-v1.0.0}}
     pull_policy: missing
@@ -41,7 +41,7 @@ services:
       # Data Integrity Checks output (REDCap_Data_Integrity_Checks) written by the DB
       - ./Audit_Analysis_Reports:/var/lib/mysql/Audit_Analysis_Reports
       # Live-mount external modules so EM edits show up without a rebuild
-      #- ../redcap_source/modules/:/var/www/html/modules/
+      # - ../redcap_source/modules/:/var/www/html/modules/
 volumes:
   cctc_mariadb_data:
     name: cctc_mariadb_data

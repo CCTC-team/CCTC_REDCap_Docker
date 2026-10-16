@@ -1,0 +1,14 @@
+# MariaDB overrides for REDCap. Installed as mariadb.conf.d/99-redcap.cnf so it
+# loads after the Debian defaults; read by both mariadbd launches (the bootstrap
+# in entrypoint.sh and the supervisord program).
+
+[mysqld]
+# REDCap Control Center recommends 1G (the maximum); no downside to the max.
+max_allowed_packet = 1G
+
+# Client tools (entrypoint seeding, SQL dump restores) need a matching limit.
+[mysql]
+max_allowed_packet = 1G
+
+[mysqldump]
+max_allowed_packet = 1G

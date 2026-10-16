@@ -35,7 +35,7 @@
 set -euo pipefail
 
 # --- config (override via env) ------------------------------------------------
-REDCAP_VERSION="${REDCAP_VERSION:-15.5.36}"
+REDCAP_VERSION="${REDCAP_VERSION:-17.5.6}"
 CYPRESS_TAG="${CYPRESS_TAG:-15.10.0}"
 PLATFORMS="${PLATFORMS:-linux/amd64,linux/arm64}"
 BUILDER="${BUILDER:-cctc-multiarch}"

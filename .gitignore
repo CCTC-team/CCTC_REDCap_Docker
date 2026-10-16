@@ -19,3 +19,7 @@ redcap_docker_aio/Audit_Analysis_Reports/
 
 # All-in-one stack local env (credentials/salt) — keep the .env.example template
 redcap_docker_aio/.env
+
+# Local DB dumps (contain user accounts/hashes and project data) — keep the seed script
+redcap_docker_aio/*.sql
+!redcap_docker_aio/CreateUsers.sql

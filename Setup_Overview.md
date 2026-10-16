@@ -68,10 +68,10 @@ Cypress connects to the Dockerised REDCap instance, resets the database to a cle
 
 2. **Place your REDCap source files** into `CCTC_REDCap_Docker/redcap_source/`. The folder should contain a version directory, e.g.:
    ```
-   CCTC_REDCap_Docker/redcap_source/redcap_v15.5.36/
+   CCTC_REDCap_Docker/redcap_source/redcap_v17.5.6/
    ```
 
-3. **Configure the `.env` file** in `CCTC_REDCap_Docker/redcap_docker_aio/`. Copy from `.env.example` if needed, then set `REDCAP_VERSION` to match your source folder (e.g., `15.5.36`).
+3. **Configure the `.env` file** in `CCTC_REDCap_Docker/redcap_docker_aio/`. Copy from `.env.example` if needed, then set `REDCAP_VERSION` to match your source folder (e.g., `17.5.6`).
 
 4. **Build and start the container**:
    ```bash
@@ -215,7 +215,7 @@ This creates `cypress/results/html/test-report.html` — open it in a browser to
 To customise the report filename per run, set the `REPORT_NAME` environment variable:
 
 ```bash
-REPORT_NAME=v15.5.36-smoke npm run test:local -- --browser chrome --spec "..."
+REPORT_NAME=v17.5.6-smoke npm run test:local -- --browser chrome --spec "..."
 ```
 
 To clear old results before a fresh run:

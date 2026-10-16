@@ -53,7 +53,7 @@ A single container (`CCTC_REDCap_Docker`) runs all three services under `supervi
 
 | Variable             | Default    | Description                                      |
 |----------------------|------------|--------------------------------------------------|
-| REDCAP_VERSION       | 15.5.36    | Must match directory name under `redcap_source/`  |
+| REDCAP_VERSION       | 17.5.6     | Must match directory name under `redcap_source/`  |
 | REDCAP_IMAGE_TAG     | v1.0.0     | Image tag → `cctc/redcap-<version>:<tag>`        |
 | MYSQL_ROOT_PASSWORD  | root       | MariaDB root password                            |
 | MYSQL_DATABASE       | redcap     | Database name                                    |
