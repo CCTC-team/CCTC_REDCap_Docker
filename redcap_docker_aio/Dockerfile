@@ -8,7 +8,9 @@
 #
 # Build context MUST be the parent CCTC_REDCap_Docker/ dir so redcap_source/ is
 # reachable (the bundled docker-compose.yml sets context: ..).
-FROM php:8.2.30-apache
+# Debian bookworm base: its distro mariadb-server is the 10.11 LTS line (trixie
+# ships 11.8). The version is asserted after the apt install below.
+FROM php:8.2.30-apache-bookworm
 
 ARG REDCAP_VERSION
 RUN test -n "${REDCAP_VERSION}" || (echo "ERROR: REDCAP_VERSION build arg is required" && exit 1)
@@ -25,6 +27,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libfreetype6-dev libjpeg62-turbo-dev libpng-dev libzip-dev zip \
     libmagickwand-dev \
     && rm -rf /var/lib/apt/lists/*
+
+# Fail the build if MariaDB is not on the 10.11 line.
+RUN mariadbd --version | grep -q ' 10\.11\.' || \
+    (echo "ERROR: expected MariaDB 10.11, got: $(mariadbd --version)" && exit 1)
 
 # Go toolchain (latest stable) -> build mhsendmail (PHP mail routing) and MailHog
 # (SMTP+UI) from source so both are native-arch (MailHog ships no arm64 release
