@@ -10,7 +10,7 @@
 # reachable (the bundled docker-compose.yml sets context: ..).
 # Debian bookworm base: its distro mariadb-server is the 10.11 LTS line (trixie
 # ships 11.8). The version is asserted after the apt install below.
-FROM php:8.2.30-apache-bookworm
+FROM php:8.2.35-apache-bookworm
 
 ARG REDCAP_VERSION
 RUN test -n "${REDCAP_VERSION}" || (echo "ERROR: REDCAP_VERSION build arg is required" && exit 1)
