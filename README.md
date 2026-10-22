@@ -88,7 +88,7 @@ Uses the image built locally by the `docker compose up --build` step above (`cct
 docker run -d --name CCTC_REDCap_Docker \
   -p 8080:80 -p 8443:8443 -p 8025:8025 -p 1025:1025 -p 3400:3306 \
   -v cctc_mariadb_data:/var/lib/mysql \
-  cctc/redcap-17.5.6:v1.0.0
+  cctc/redcap-17.5.6:v1.0.1
 ```
 </details>
 
@@ -101,7 +101,7 @@ docker run -d --name CCTC_REDCap_Docker \
 | MailHog    | http://localhost:8025      |
 | MariaDB    | `localhost:3400` (`127.0.0.1:3400` for the `mysql` CLI) |
 
-The built image is **`cctc/redcap-${REDCAP_VERSION}:${REDCAP_IMAGE_TAG}`** (e.g. `cctc/redcap-17.5.6:v1.0.0`); the container is named **`CCTC_REDCap_Docker`**.
+The built image is **`cctc/redcap-${REDCAP_VERSION}:${REDCAP_IMAGE_TAG}`** (e.g. `cctc/redcap-17.5.6:v1.0.1`); the container is named **`CCTC_REDCap_Docker`**.
 
 ---
 
@@ -130,7 +130,7 @@ All test users have password: `Testing123`
 | Variable | Default | Description |
 |----------|---------|-------------|
 | `REDCAP_VERSION` | `17.5.6` | must match a `redcap_v*` dir in `../redcap_source/` |
-| `REDCAP_IMAGE_TAG` | `v1.0.0` | image tag → `cctc/redcap-<version>:<tag>` |
+| `REDCAP_IMAGE_TAG` | `v1.0.1` | image tag → `cctc/redcap-<version>:<tag>` |
 | `MYSQL_ROOT_PASSWORD` | `root` | MariaDB root password |
 | `MYSQL_DATABASE` | `redcap` | database name |
 | `REDCAP_SALT` | `12345678` | hash salt — do **not** change after first install |
