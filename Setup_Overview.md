@@ -282,7 +282,7 @@ The following steps may be a useful checklist when configuring your institution'
 1. **Checkout REDCap and related source code** intended for deployment (includes REDCap source + could include hooks, plugins, EMs, etc.)
 2. Checkout **redcap_cypress** repository
 3. Generate **cypress.config.js** from **cypress.config.js.example** and update **baseUrl** and **mailHogUrl** to point to your REDCap and MailHog instances. Generate **cypress.env.json** from **cypress.env.json.example** and set **redcap_version** and **MySQL** environment variables as needed for your environment.
-4. Set desired **redcap_rsvc** version in **package.json** (e.g. `"redcap_rsvc": "github:CCTC-team/redcap_rsvc#cctc_v1.0.13"`)
+4. Set desired **redcap_rsvc** version in **package.json** (e.g. `"redcap_rsvc": "github:CCTC-team/redcap_rsvc#cctc_v1.0.14"`)
 5. Install Cypress and RCTF dependencies: `npm install`
 6. Install REDCap RSVC feature tests (as defined in **package.json**): `npm run redcap_rsvc:install`
 7. Start test instance of REDCap (if not already running). Command is specific to test instance implementation.
