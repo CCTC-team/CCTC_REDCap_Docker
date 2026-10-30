@@ -33,13 +33,20 @@ CCTC has two divisions: Cancer Theme, which coordinates trial delivery, and Clin
 git clone git@github.com:CCTC-team/CCTC_REDCap_Docker.git
 ```
 
-### 2. Place REDCap source files
+### 2. Get the REDCap source files
 
-Copy your REDCap installation files (contents inside the redcap folder) into the `redcap_source/` directory. The structure should look like:
+`redcap_source/` is its own git repo: the private [`CCTC-team/redcap_source`](https://github.com/CCTC-team/redcap_source), with one branch per REDCap version. Clone the branch for your version into this repo:
+
+```bash
+cd CCTC_REDCap_Docker
+git clone -b 17.5.8 git@github.com:CCTC-team/redcap_source.git redcap_source
+```
+
+External modules under `redcap_source/modules/` are git-ignored there, because each EM is its own repo. The structure should look like:
 
 ```
 redcap_source/
-├── redcap_v17.5.7/        # Version directory (name must match your version)
+├── redcap_v17.5.8/        # Version directory (name must match your version)
 ├── install.php
 ├── upgrade.php
 ├── redcap_connect.php
@@ -67,7 +74,7 @@ Copy the example environment file:
 cp .env.example .env
 ```
 
-Edit `.env` and set `REDCAP_VERSION` to match your version directory (e.g., `17.5.7`). See [Configuration](#configuration-env) for the full list of variables.
+Edit `.env` and set `REDCAP_VERSION` to match your version directory (e.g., `17.5.8`). See [Configuration](#configuration-env) for the full list of variables.
 
 ### 4. Build and Run
 
@@ -88,7 +95,7 @@ Uses the image built locally by the `docker compose up --build` step above (`cct
 docker run -d --name CCTC_REDCap_Docker \
   -p 8080:80 -p 8443:8443 -p 8025:8025 -p 1025:1025 -p 3400:3306 \
   -v cctc_mariadb_data:/var/lib/mysql \
-  cctc/redcap-17.5.7:v1.0.1
+  cctc/redcap-17.5.8:v1.0.1
 ```
 </details>
 
@@ -101,7 +108,7 @@ docker run -d --name CCTC_REDCap_Docker \
 | MailHog    | http://localhost:8025      |
 | MariaDB    | `localhost:3400` (`127.0.0.1:3400` for the `mysql` CLI) |
 
-The built image is **`cctc/redcap-${REDCAP_VERSION}:${REDCAP_IMAGE_TAG}`** (e.g. `cctc/redcap-17.5.7:v1.0.1`); the container is named **`CCTC_REDCap_Docker`**.
+The built image is **`cctc/redcap-${REDCAP_VERSION}:${REDCAP_IMAGE_TAG}`** (e.g. `cctc/redcap-17.5.8:v1.0.1`); the container is named **`CCTC_REDCap_Docker`**.
 
 ---
 
@@ -129,7 +136,7 @@ All test users have password: `Testing123`
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `REDCAP_VERSION` | `17.5.7` | must match a `redcap_v*` dir in `../redcap_source/` |
+| `REDCAP_VERSION` | `17.5.8` | must match a `redcap_v*` dir in `../redcap_source/` |
 | `REDCAP_IMAGE_TAG` | `v1.0.1` | image tag → `cctc/redcap-<version>:<tag>` |
 | `MYSQL_ROOT_PASSWORD` | `root` | MariaDB root password |
 | `MYSQL_DATABASE` | `redcap` | database name |
@@ -241,7 +248,7 @@ tests the byte-identical REDCap. Set `REDCAP_IMAGE` in `.env`, then pull instead
 
 ```bash
 # in redcap_docker_aio/.env
-REDCAP_IMAGE=ghcr.io/cctc-team/cctc_redcap_docker/redcap-aio:17.5.7
+REDCAP_IMAGE=ghcr.io/cctc-team/cctc_redcap_docker/redcap-aio:17.5.8
 
 docker compose pull && docker compose up -d
 ```

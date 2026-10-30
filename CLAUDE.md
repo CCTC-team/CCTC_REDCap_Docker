@@ -27,7 +27,7 @@ CCTC_REDCap_Docker/
 │   ├── .env.example            # template env (REDCAP_VERSION is the version source of truth)
 │   └── Audit_Analysis_Reports/ # data integrity check results (git-ignored, bind-mounted)
 ├── redcap_cypress/             # Cypress test suite + cypress_runner/ CI image
-├── redcap_source/              # REDCap source files (not committed; COPYed into image)
+├── redcap_source/              # nested git repo CCTC-team/redcap_source (git-ignored here; COPYed into image)
 ├── README.md                   # full setup, config, operations
 └── Setup_Overview.md           # higher-level tie-together guide
 ```
@@ -53,7 +53,7 @@ A single container (`CCTC_REDCap_Docker`) runs all three services under `supervi
 
 | Variable             | Default    | Description                                      |
 |----------------------|------------|--------------------------------------------------|
-| REDCAP_VERSION       | 17.5.7     | Must match directory name under `redcap_source/`  |
+| REDCAP_VERSION       | 17.5.8     | Must match directory name under `redcap_source/`  |
 | REDCAP_IMAGE_TAG     | v1.0.1     | Image tag → `cctc/redcap-<version>:<tag>`        |
 | MYSQL_ROOT_PASSWORD  | root       | MariaDB root password                            |
 | MYSQL_DATABASE       | redcap     | Database name                                    |
