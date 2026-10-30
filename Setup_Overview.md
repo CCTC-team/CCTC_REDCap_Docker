@@ -66,7 +66,7 @@ Cypress connects to the Dockerised REDCap instance, resets the database to a cle
 
 1. **Clone the repository** (if you haven't already).
 
-2. **Place your REDCap source files** into `CCTC_REDCap_Docker/redcap_source/`. The folder should contain a version directory, e.g.:
+2. **Clone the REDCap source** into `CCTC_REDCap_Docker/redcap_source/`. It is its own private repo with one branch per version: `git clone -b 17.5.8 git@github.com:CCTC-team/redcap_source.git redcap_source`. The folder should contain a version directory, e.g.:
    ```
    CCTC_REDCap_Docker/redcap_source/redcap_v17.5.8/
    ```

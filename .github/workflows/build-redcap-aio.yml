@@ -68,7 +68,7 @@ jobs:
             export BRANCH=${{ env.REDCAP_VERSION }}
           fi
 
-          cd redcap_source
+          mkdir -p redcap_source && cd redcap_source
           git clone --depth=1 --branch=$BRANCH \
             https://x-access-token:${GH_PAT}@github.com/CCTC-team/redcap_source.git _clone
           git -C _clone log -1

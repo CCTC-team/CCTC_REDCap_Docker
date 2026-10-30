@@ -1,6 +1,6 @@
-# Ignore contents of redcap_source (populated at runtime), but track the folder
-redcap_source/*
-!redcap_source/README.txt
+# redcap_source/ is its own git repo (CCTC-team/redcap_source, one branch per
+# REDCap version), cloned here locally and by CI
+redcap_source/
 
 # macOS
 .DS_Store

@@ -33,9 +33,16 @@ CCTC has two divisions: Cancer Theme, which coordinates trial delivery, and Clin
 git clone git@github.com:CCTC-team/CCTC_REDCap_Docker.git
 ```
 
-### 2. Place REDCap source files
+### 2. Get the REDCap source files
 
-Copy your REDCap installation files (contents inside the redcap folder) into the `redcap_source/` directory. The structure should look like:
+`redcap_source/` is its own git repo: the private [`CCTC-team/redcap_source`](https://github.com/CCTC-team/redcap_source), with one branch per REDCap version. Clone the branch for your version into this repo:
+
+```bash
+cd CCTC_REDCap_Docker
+git clone -b 17.5.8 git@github.com:CCTC-team/redcap_source.git redcap_source
+```
+
+External modules under `redcap_source/modules/` are git-ignored there, because each EM is its own repo. The structure should look like:
 
 ```
 redcap_source/

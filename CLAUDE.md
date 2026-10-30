@@ -27,7 +27,7 @@ CCTC_REDCap_Docker/
 │   ├── .env.example            # template env (REDCAP_VERSION is the version source of truth)
 │   └── Audit_Analysis_Reports/ # data integrity check results (git-ignored, bind-mounted)
 ├── redcap_cypress/             # Cypress test suite + cypress_runner/ CI image
-├── redcap_source/              # REDCap source files (not committed; COPYed into image)
+├── redcap_source/              # nested git repo CCTC-team/redcap_source (git-ignored here; COPYed into image)
 ├── README.md                   # full setup, config, operations
 └── Setup_Overview.md           # higher-level tie-together guide
 ```
