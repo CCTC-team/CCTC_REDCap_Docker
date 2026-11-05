@@ -6,6 +6,10 @@
 # REDCap Control Center recommends 1G (the maximum); no downside to the max.
 max_allowed_packet = 1G
 
+# REDCap Control Center flags rowid_filter=on (MariaDB default) as a config
+# issue that can cause wrong results or server crashes; disable it.
+optimizer_switch = rowid_filter=OFF
+
 # Client tools (entrypoint seeding, SQL dump restores) need a matching limit.
 [mysql]
 max_allowed_packet = 1G
